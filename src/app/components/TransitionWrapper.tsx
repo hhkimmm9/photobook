@@ -14,12 +14,7 @@ const TransitionWrapper = ({ children }: { children: ReactNode }) => {
       enterAnimation={""}
       exitAnimation={""}
     >
-      <div className="
-        row-start-2 flex flex-col gap-8
-        items-center sm:items-start
-      ">
-        { children }
-      </div>
+      { children }
     </PageTransition>
   )
 }

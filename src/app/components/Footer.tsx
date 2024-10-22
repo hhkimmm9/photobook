@@ -1,7 +1,7 @@
 const Footer = () => {
   return (
-    <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-      Photographer Harrison Kim Footer
+    <footer className="row-start-3">
+      footer
     </footer>
   )
 }
