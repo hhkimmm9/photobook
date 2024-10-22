@@ -6,14 +6,14 @@ const LayoutWrapper = ({ children }: { children: ReactNode }) => {
   return (
     <div className="
       grid items-center justify-items-center
-      min-h-screen p-8 pb-20 gap-16 sm:p-20
+      min-h-screen bg-stone-100
       font-[family-name:var(--font-geist-sans)]
     ">
       <Header />
 
       <div className="
-        w-full h-full mt-20 pt-4
-      ">{ children } </div>
+        w-full h-full mt-32 p-4 overflow-y-auto
+      ">{ children }</div>
 
       {/* <Footer /> */}
 
