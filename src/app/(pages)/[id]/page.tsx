@@ -11,7 +11,7 @@ const MASTER_PWD = "test123"
 const Page = () => {
   const pathname = usePathname()
   const [state, setState] = useState({
-    hasAccess: true,
+    hasAccess: false,
     album: null as IAlbum | null,
     pwd: ""
   })
