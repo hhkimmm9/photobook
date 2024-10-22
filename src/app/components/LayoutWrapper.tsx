@@ -1,16 +1,20 @@
 import { ReactNode } from 'react';
-import NavBar from "@/app/components/Navbar";
+import Header from "@/app/components/Header";
 // import Footer from "@/app/components/Footer";
 
 const LayoutWrapper = ({ children }: { children: ReactNode }) => {
   return (
     <div className="
-      grid grid-rows-[20px_1fr] items-center justify-items-center
-      min-h-screen p-8 pb-20 gap-16 sm:p-20
+      grid items-center justify-items-center
+      min-h-screen bg-stone-100
       font-[family-name:var(--font-geist-sans)]
     ">
-      <NavBar />
-      { children }
+      <Header />
+
+      <div className="
+        w-full h-full mt-32 p-4 overflow-y-auto
+      ">{ children }</div>
+
       {/* <Footer /> */}
 
       {/* Some extra components such as modals can be placed in this component. */}
