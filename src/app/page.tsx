@@ -1,5 +1,5 @@
 import { IAlbum } from "@/interfaces"
-import album_list from "@/app/json/album_list.json"
+import album_list from "@/json/album_list.json"
 import Image from "next/image"
 import Link from "next/link"
 

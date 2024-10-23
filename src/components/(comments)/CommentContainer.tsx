@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react'
 import { IComment } from "@/interfaces"
-import Comment from "@/app/components/(comments)/Comment"
-import AddComment from "@/app/components/(comments)/AddComment"
+import Comment from "@/components/(comments)/Comment"
+import AddComment from "@/components/(comments)/AddComment"
 
 const CommentContainer = () => {
   const [showAddComment, setShowAddComment] = useState(false)

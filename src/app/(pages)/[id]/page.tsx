@@ -1,11 +1,11 @@
 "use client"
 
-import album_list from "@/app/json/album_list.json"
+import album_list from "@/json/album_list.json"
 import { IAlbum } from "@/interfaces"
 import { usePathname } from "next/navigation"
 import { useState, useEffect, FormEvent } from "react"
 import Image from "next/image"
-import CommentContainer from "@/app/components/(comments)/CommentContainer"
+import CommentContainer from "@/components/(comments)/CommentContainer"
 
 const MASTER_PWD = "test123"
 
