@@ -5,7 +5,24 @@
     "name": "COTB Camping Fall 2024",
     "date": "Oct 12, 2024",
     "thumbnailImage": "/photos/cotb-camping-fall-2024/36BB525D-4D18-455D-B3B7-2FF711ECA361_1_105_c.jpeg",
-    "url": "/cotb-camping-fall-2024"
+    "url": "/cotb-camping-fall-2024",
+    "images": [
+      {
+        "id": 1,
+        "name": "COTB Camping Fall 2024",
+        "url": "/photos/cotb-camping-fall-2024/36BB525D-4D18-455D-B3B7-2FF711ECA361_1_105_c.jpeg"
+      },
+      {
+        "id": 2,
+        "name": "COTB Camping Fall 2024",
+        "url": "/photos/cotb-camping-fall-2024/36BB525D-4D18-455D-B3B7-2FF711ECA361_1_105_c.jpeg"
+      },
+      {
+        "id": 3,
+        "name": "COTB Camping Fall 2024",
+        "url": "/photos/cotb-camping-fall-2024/36BB525D-4D18-455D-B3B7-2FF711ECA361_1_105_c.jpeg"
+      }
+    ]
   }
  ] 
 }

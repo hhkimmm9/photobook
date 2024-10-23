@@ -1,10 +1,11 @@
 "use client"
 
-import { IAlbum } from "@/interfaces"
 import album_list from "@/app/json/album_list.json"
+import { IAlbum } from "@/interfaces"
 import { usePathname } from "next/navigation"
 import { useState, useEffect, FormEvent } from "react"
 import Image from "next/image"
+import CommentContainer from "@/app/components/(comments)/CommentContainer"
 
 const MASTER_PWD = "test123"
 
@@ -49,70 +50,35 @@ const Page = () => {
       </form>
     </div>
   ) : (
-    <div className="">
-      <div>
-        <h1 className="font-medium text-lg">{ state.album?.name }</h1>
-        <p className="text-sm text-zinc-700">{ state.album?.date }</p>
+    <div className="pb-8">
+      <div className="text-center mb-8">
+        <h1 className="font-bold text-2xl text-gray-800">{state.album?.name}</h1>
+        <p className="text-sm text-gray-500">{state.album?.date}</p>
       </div>
 
-      <div className="mt-8 flex flex-col gap-6">
-        <Image 
-          src={state.album?.thumbnailImage || "/images/default-thumbnail.png"} 
-          alt="thumbnail" 
-          width={256} 
-          height={192} 
-          className="w-full cursor-pointer"
-          onClick={() => {
-            const img = new window.Image()
-            img.src = state.album?.thumbnailImage || "/default-thumbnail.jpg"
-            const viewer = window.open("", "_blank")
-            viewer?.document.write(img.outerHTML)
-            viewer?.document.close()
-          }}
-        />
-        <Image 
-          src={state.album?.thumbnailImage || "/images/default-thumbnail.png"} 
-          alt="thumbnail" 
-          width={256} 
-          height={192} 
-          className="w-full cursor-pointer"
-          onClick={() => {
-            const img = new window.Image()
-            img.src = state.album?.thumbnailImage || "/default-thumbnail.jpg"
-            const viewer = window.open("", "_blank")
-            viewer?.document.write(img.outerHTML)
-            viewer?.document.close()
-          }}
-        />
-        <Image 
-          src={state.album?.thumbnailImage || "/images/default-thumbnail.png"} 
-          alt="thumbnail" 
-          width={256} 
-          height={192} 
-          className="w-full cursor-pointer"
-          onClick={() => {
-            const img = new window.Image()
-            img.src = state.album?.thumbnailImage || "/default-thumbnail.jpg"
-            const viewer = window.open("", "_blank")
-            viewer?.document.write(img.outerHTML)
-            viewer?.document.close()
-          }}
-        />
-        <Image 
-          src={state.album?.thumbnailImage || "/images/default-thumbnail.png"} 
-          alt="thumbnail" 
-          width={256} 
-          height={192} 
-          className="w-full cursor-pointer"
-          onClick={() => {
-            const img = new window.Image()
-            img.src = state.album?.thumbnailImage || "/default-thumbnail.jpg"
-            const viewer = window.open("", "_blank")
-            viewer?.document.write(img.outerHTML)
-            viewer?.document.close()
-          }}
-        />
+      <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8">
+        {state.album?.images.map((image, index) => (
+          <div key={index} className="relative">
+            <Image 
+              src={image.url} alt={`image-${index}`} 
+              width={256} height={192}
+              className="w-full h-auto rounded-lg shadow-lg cursor-pointer transition-transform transform hover:scale-105"
+              onClick={() => {
+                const img = new window.Image()
+                img.src = image.url
+                const viewer = window.open("", "_blank")
+                viewer?.document.write(img.outerHTML)
+                viewer?.document.close()
+              }}
+            />
+            <div className="absolute bottom-2 left-2 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded">
+              Click to enlarge
+            </div>
+          </div>
+        ))}
       </div>
+
+      <CommentContainer />
     </div>
   )
 }
