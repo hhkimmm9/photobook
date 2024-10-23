@@ -43,7 +43,7 @@ const AddComment = ({ hideAddComment }: IAddCommentProps) => {
       } else {
         // 
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err)
     }
   }
