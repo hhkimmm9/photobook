@@ -11,7 +11,7 @@ const CommentContainer = () => {
 
   useEffect(() => {
     if (showAddComment) {
-      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })
+      window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" })
     }
   }, [showAddComment])
 
@@ -42,7 +42,7 @@ const CommentContainer = () => {
   )
 
   return (
-    <div className='w-full grid justify-items-center '>
+    <div className="w-full grid justify-items-center">
       <div className="
         grid justify-items-center
         max-w-md w-full mt-6 md:mt-10 p-5 space-y-6
@@ -63,7 +63,7 @@ const CommentContainer = () => {
           </>
         ) : (
           <>
-            <p className="text-lg font-semibold text-gray-700">Here's what others are saying...</p>
+            <p className="text-lg font-semibold text-gray-700">Here&apos;s what others are saying...</p>
             { comments.map((comment: IComment) => (
               <div key={comment._id} className="space-y-3">
                 <Comment comment={comment} />
