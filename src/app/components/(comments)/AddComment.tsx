@@ -41,11 +41,10 @@ const AddComment = ({ hideAddComment }: IAddCommentProps) => {
         setFormState({ writer: '', comment: '', password: '' })
         // notifyCommentAdded()
       } else {
-        const errorText = await res.text()
-        // notifyCommentFailed(errorText)
+        // 
       }
     } catch (err: any) {
-      // notifyCommentFailed(err.message || "An error occurred")
+      console.error(err)
     }
   }
 
