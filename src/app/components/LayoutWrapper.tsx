@@ -6,7 +6,7 @@ const LayoutWrapper = ({ children }: { children: ReactNode }) => {
   return (
     // grid items-center justify-items-center min-h-screen 
     <div className="
-      grid min-h-screen bg-stone-100
+      min-h-screen bg-stone-100
       font-[family-name:var(--font-geist-sans)]
     ">
       <Header />
