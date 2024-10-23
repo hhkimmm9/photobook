@@ -5,7 +5,7 @@ import { IAlbum } from "@/interfaces"
 import { usePathname } from "next/navigation"
 import { useState, useEffect, FormEvent } from "react"
 import Image from "next/image"
-import CommentContainer from "@/components/(comments)/CommentContainer"
+import CommentContainer from "@/app/(components)/(comments)/CommentContainer"
 
 const MASTER_PWD = "test123"
 
