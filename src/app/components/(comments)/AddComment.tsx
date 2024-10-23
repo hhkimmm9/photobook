@@ -49,46 +49,69 @@ const AddComment = ({ hideAddComment }: IAddCommentProps) => {
   }
 
   return (
-    <form onSubmit={(e) => addComment(e)}>
+    <form onSubmit={(e) => addComment(e)} className="space-y-6">
       <div className="grid grid-cols-5 gap-6">
         <div className="col-span-3 flex flex-col">
-          <input type="text" placeholder="Your name?"
-            value={formState.writer} onChange={handleChange}
+          <input 
+            type="text" 
+            name="writer"
+            placeholder="Your name?"
+            value={formState.writer} 
+            onChange={handleChange}
             className="
               p-2
-              border-b border-dashed outline-none
-          "/>
+              border-b border-gray-300 focus:border-blue-500
+              outline-none transition-colors duration-300
+        "/>
         </div>
         <div className="col-span-2 flex flex-col">
-          <input type="password" placeholder="password?"
-            value={formState.password} onChange={handleChange}
+          <input 
+            type="password" 
+            name="password"
+            placeholder="Password?"
+            value={formState.password} 
+            onChange={handleChange}
             className="
               p-2
-              border-b border-dashed outline-none
+              border-b border-gray-300 focus:border-blue-500
+              outline-none transition-colors duration-300
           "/>
         </div>
       </div>
       
       <div className="mt-5 flex flex-col gap-2">
-        <textarea name="content" value={formState.comment}
-          onChange={handleChange}
-          className="
-            w-full h-28 p-2 rounded-md
-            border
-            outline-none resize-none overflow-auto
-          "
-        />
+      <textarea 
+        name="comment" 
+        placeholder="Your comment..."
+        value={formState.comment}
+        onChange={handleChange}
+        className="
+          w-full h-28 p-2 rounded-md
+          border border-gray-300 focus:border-blue-500
+          outline-none resize-none overflow-auto
+          transition-colors duration-300
+      "/>
       </div>
 
       <div className="mt-6 grid grid-cols-2 gap-3">
-        <button onClick={() => hideAddComment()} className="
-          py-3 rounded-md
-          border border-dashed
-        "> Actually, nvm </button>
-        <button type="submit" className="
-          py-3 rounded-md
-          border border-dashed
-        "> Add </button>
+        <button 
+          type="button" 
+          onClick={() => hideAddComment()} 
+          className="
+            py-3 rounded-md
+            border border-gray-300 hover:border-red-500
+            text-gray-700 hover:text-red-500
+            transition-colors duration-300
+          "> Cancel </button>
+
+        <button 
+          type="submit" 
+          className="
+            py-3 rounded-md
+            bg-blue-500 text-white
+            hover:bg-blue-600
+            transition-colors duration-300
+          "> Add </button>
       </div>
     </form>
   )

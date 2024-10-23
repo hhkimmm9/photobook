@@ -47,41 +47,42 @@ const CommentContainer = () => {
         grid justify-items-center
         max-w-md w-full mt-6 md:mt-10 p-5 space-y-6
         rounded-xl bg-white shadow-lg
+        transform transition-transform
       ">
         {comments.length === 0 ? (
           <>
-            { !showAddComment ? (
-              <>
-                <p className="mt-6 text-center text-gray-600">
-                  Be the first to leave a comment&nbsp;💬
-                </p>
-                { renderAddCommentButton() }
-              </>
-            ) : (
-              <AddComment hideAddComment={() => setShowAddComment(false)} />
-            )}
+          { !showAddComment ? (
+            <>
+            <p className="mt-6 text-center text-gray-600">
+              Be the first to leave a comment&nbsp;💬
+            </p>
+            { renderAddCommentButton() }
+            </>
+          ) : (
+            <AddComment hideAddComment={() => setShowAddComment(false)} />
+          )}
           </>
         ) : (
           <>
-            <p className="text-lg font-semibold text-gray-700">Here&apos;s what others are saying...</p>
-            { comments.map((comment: IComment) => (
-              <div key={comment._id} className="space-y-3">
-                <Comment comment={comment} />
-              </div>
-            ))}
+          <p className="text-lg font-semibold text-gray-700">Here&apos;s what others are saying...</p>
+          { comments.map((comment: IComment) => (
+            <div key={comment._id} className="space-y-3">
+            <Comment comment={comment} />
+            </div>
+          ))}
 
-            <hr className="w-full border-gray-300" />
+          <hr className="w-full border-gray-300" />
 
-            { !showAddComment ? (
-              <div className="flex gap-3 justify-between items-center">
-                <p className="text-gray-600">Want to add your thoughts?</p>
-                <button onClick={() => setShowAddComment(true)}
-                  className="px-3 py-2 rounded-lg border border-gray-300 text-gray-700 whitespace-nowrap hover:bg-gray-100"
-                > Absolutely&nbsp;&nbsp;😎 </button>
-              </div>
-            ) : (
-              <AddComment hideAddComment={() => setShowAddComment(false)} />
-            )}
+          { !showAddComment ? (
+            <div className="flex gap-3 justify-between items-center">
+            <p className="text-gray-600">Want to add your thoughts?</p>
+            <button onClick={() => setShowAddComment(true)}
+              className="px-3 py-2 rounded-lg border border-gray-300 text-gray-700 whitespace-nowrap hover:bg-gray-100 transform transition-transform hover:scale-105"
+            > Absolutely&nbsp;&nbsp;😎 </button>
+            </div>
+          ) : (
+            <AddComment hideAddComment={() => setShowAddComment(false)} />
+          )}
           </>
         )}
       </div>
