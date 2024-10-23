@@ -19,9 +19,9 @@ export const convertDate = (dateInString: string | undefined) => {
 }
 
 export const timeSince = (date: number) => {
-  var seconds = Math.floor((new Date().valueOf() - date) / 1000)
+  const seconds = Math.floor((new Date().valueOf() - date) / 1000)
 
-  var interval = seconds / 31536000
+  let interval = seconds / 31536000
   if (interval > 1) {
     return Math.floor(interval) + ' years'
   }
