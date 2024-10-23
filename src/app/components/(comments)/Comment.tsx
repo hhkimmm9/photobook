@@ -18,7 +18,7 @@ const Comment = ({ comment } : TCommentProps) => {
     e.preventDefault()
 
     if (passwordInput.length === 0) {
-      let inputTag = document.getElementById("passwordInputTag")
+      const inputTag = document.getElementById("passwordInputTag")
       if (inputTag) inputTag.focus()
       return
     }
