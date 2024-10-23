@@ -12,7 +12,7 @@ const LayoutWrapper = ({ children }: { children: ReactNode }) => {
       <Header />
 
       <div className="
-        min-h-[calc(100vh-4rem)] mt-16 p-4
+        min-h-[calc(100vh-4rem)] mt-16 md:px-20 px-4 py-8
       ">{ children }</div>
 
       {/* <Footer /> */}
