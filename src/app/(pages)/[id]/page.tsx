@@ -23,7 +23,7 @@ const Page = () => {
         }
       })  
     }
-  }, [state.hasAccess])
+  }, [state, pathname])
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
