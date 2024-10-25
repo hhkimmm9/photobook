@@ -7,8 +7,6 @@ import { useState, useEffect, FormEvent } from "react"
 import { CldImage } from 'next-cloudinary';
 import CommentContainer from "@/app/(components)/(comments)/CommentContainer"
 
-const MASTER_PWD = "test123"
-
 const Page = () => {
   const pathname = usePathname()
   const [state, setState] = useState({
@@ -29,7 +27,7 @@ const Page = () => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    if (state.pwd === MASTER_PWD) {
+    if (state.pwd === process.env.TEST_ALBUM_PASSWORD) {
       setState({ ...state, hasAccess: true })
     }
   }
