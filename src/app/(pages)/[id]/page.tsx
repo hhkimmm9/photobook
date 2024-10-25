@@ -5,7 +5,7 @@ import { IAlbum } from "@/interfaces"
 import { usePathname } from "next/navigation"
 import { useState, useEffect, FormEvent } from "react"
 import { CldImage } from 'next-cloudinary';
-import CommentContainer from "@/app/(components)/(comments)/CommentContainer"
+// import CommentContainer from "@/app/(components)/(comments)/CommentContainer"
 
 const ITS_OKAY_TO_BE_EXPOSED = "cheese"
 
@@ -26,7 +26,7 @@ const Page = () => {
         }
       })  
     }
-  }, [state, pathname])
+  }, [state.hasAccess, pathname])
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -84,7 +84,7 @@ const Page = () => {
         ))}
       </div>
 
-      <CommentContainer />
+      {/* <CommentContainer /> */}
     </div>
   )
 }
