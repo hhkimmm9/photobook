@@ -18,7 +18,7 @@ const CommentContainer = () => {
   useEffect(() => {
     const readComment = async () => {
       try {
-        const res = await fetch("/api/comments", {
+        const res = await fetch("/api/comments?albumId=1", {
           method: "GET",
           headers: {
             "Content-Type": "application/json"
