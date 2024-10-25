@@ -35,7 +35,7 @@ const Page = () => {
   }
 
   return !state.hasAccess ? (
-    <div className="flex justify-center h-full">
+    <div className="flex items-center justify-center h-[calc(100vh-7rem)]">
       <form onSubmit={handleSubmit} className="w-64 flex flex-col gap-4 items-center justify-center">
         <input
           type="password"
