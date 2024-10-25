@@ -7,12 +7,15 @@ import { useState, useEffect, FormEvent } from "react"
 import { CldImage } from 'next-cloudinary';
 import CommentContainer from "@/app/(components)/(comments)/CommentContainer"
 
+const ITS_OKAY_TO_BE_EXPOSED = "cheese"
+
 const Page = () => {
   const pathname = usePathname()
   const [state, setState] = useState({
     hasAccess: false,
     album: null as IAlbum | null,
-    pwd: ""
+    pwd: "",
+    warningMessage: ""
   })
 
   useEffect(() => {
@@ -27,8 +30,10 @@ const Page = () => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    if (state.pwd === process.env.TEST_ALBUM_PASSWORD) {
+    if (state.pwd === ITS_OKAY_TO_BE_EXPOSED) {
       setState({ ...state, hasAccess: true })
+    } else {
+      setState({ ...state, pwd: "", warningMessage: "Incorrect password" })
     }
   }
 
@@ -39,12 +44,13 @@ const Page = () => {
           type="password"
           value={state.pwd}
           placeholder="Password"
-          onChange={e => setState({ ...state, pwd: e.target.value })}
+          onChange={e => setState({ ...state, pwd: e.target.value, warningMessage: "" })}
           className="w-full p-2 border border-gray-300 rounded-md outline-none border-none"
         />
         <button type="submit" className="w-full p-2 bg-stone-500 text-white rounded-md font-medium">
           Submit
         </button>
+        <div className="h-4 mt-2 px-1 text-sm text-red-600">{state.warningMessage}</div>
       </form>
     </div>
   ) : (
