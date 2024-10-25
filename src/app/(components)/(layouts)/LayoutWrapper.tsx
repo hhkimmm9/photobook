@@ -1,5 +1,5 @@
 import { ReactNode } from "react"
-import Header from "@/components/(layouts)/Header"
+import Header from "@/app/(components)/(layouts)/Header"
 // import Footer from "@/app/components/Footer"
 
 const LayoutWrapper = ({ children }: { children: ReactNode }) => {
