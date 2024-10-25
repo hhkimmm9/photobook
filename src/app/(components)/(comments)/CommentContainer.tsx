@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react'
 import { IComment } from "@/interfaces"
-import Comment from "@/components/(comments)/Comment"
-import AddComment from "@/components/(comments)/AddComment"
+import Comment from "@/app/(components)/(comments)/Comment"
+import AddComment from "@/app/(components)/(comments)/AddComment"
 
 const CommentContainer = () => {
   const [showAddComment, setShowAddComment] = useState(false)
@@ -18,7 +18,7 @@ const CommentContainer = () => {
   useEffect(() => {
     const readComment = async () => {
       try {
-        const res = await fetch("/api/comments", {
+        const res = await fetch("/api/comments?albumId=1", {
           method: "GET",
           headers: {
             "Content-Type": "application/json"

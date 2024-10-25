@@ -1,5 +1,5 @@
 import { ReactNode } from "react"
-import Header from "@/components/(layouts)/Header"
+import Header from "@/app/(components)/(layouts)/Header"
 // import Footer from "@/app/components/Footer"
 
 const LayoutWrapper = ({ children }: { children: ReactNode }) => {
@@ -12,7 +12,8 @@ const LayoutWrapper = ({ children }: { children: ReactNode }) => {
       <Header />
 
       <div className="
-        min-h-[calc(100vh-4rem)] mt-16 md:px-20 px-4 py-8
+        min-h-[calc(100vh-7rem)] mt-16 p-6
+        md:p-12 lg:px-64 2xl:px-80
       ">{ children }</div>
 
       {/* <Footer /> */}

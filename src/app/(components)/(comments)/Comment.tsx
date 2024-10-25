@@ -44,7 +44,7 @@ const Comment = ({ comment } : TCommentProps) => {
     ">
       {/* first row */}
       <div className="flex items-center justify-between whitespace-nowrap">
-        <span className="text-lime-400">{ comment.writer }</span>
+        <span className="text-lime-400">{ comment.username }</span>
         <span className="text-sm text-zinc-500">
           { timeSince(new Date(comment.createdAt).valueOf()) } ago
         </span>

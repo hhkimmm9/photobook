@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
 import "./globals.css";
-import LayoutWrapper from "@/components/(layouts)/LayoutWrapper";
+import LayoutWrapper from "@/app/(components)/(layouts)/LayoutWrapper";
 
 export const metadata: Metadata = {
   title: "Create Next App",
