@@ -1,4 +1,5 @@
-import { Schema, Document } from "mongoose"
+// import { Schema, Document } from "mongoose"
+import { Document } from "mongoose"
 
 // export interface IComment extends Document {
 export interface IComment {
