@@ -1,18 +1,20 @@
 "use client"
 
+import { useEffect, useState, FormEvent } from "react"
 import album_list from "@/json/album_list.json"
 import { IAlbum } from "@/interfaces"
+import { Swiper, SwiperSlide } from "swiper/react"
+import { Navigation } from "swiper/modules"
+import 'swiper/css'
 import { usePathname } from "next/navigation"
-import { useState, useEffect, FormEvent } from "react"
-import { CldImage } from 'next-cloudinary';
-// import CommentContainer from "@/app/(components)/(comments)/CommentContainer"
+import PhotoCard from "./PhotoCard"
 
 const ITS_OKAY_TO_BE_EXPOSED = "cheese"
 
 const Page = () => {
   const pathname = usePathname()
   const [state, setState] = useState({
-    hasAccess: false,
+    hasAccess: true,
     album: null as IAlbum | null,
     pwd: "",
     warningMessage: ""
@@ -38,6 +40,7 @@ const Page = () => {
   }
 
   return !state.hasAccess ? (
+    // Password form
     <div className="flex items-center justify-center h-[calc(100vh-7rem)]">
       <form onSubmit={handleSubmit} className="w-64 flex flex-col gap-4 items-center justify-center">
         <input
@@ -55,36 +58,25 @@ const Page = () => {
     </div>
   ) : (
     <div className="pb-8">
+      {/* Album title and date */}
       <div className="text-center mb-8">
         <h1 className="font-bold text-2xl text-gray-800">{state.album?.title}</h1>
         <p className="text-sm text-gray-500">{state.album?.date}</p>
       </div>
 
-      <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8">
+      <Swiper
+        modules={[Navigation]}
+        spaceBetween={50}
+        slidesPerView={1}
+        onSlideChange={() => console.log('slide change')}
+        onSwiper={(swiper) => console.log(swiper)}
+      >
         {state.album?.photos.map((photo, index) => (
-          <div key={index} className="relative">
-            <CldImage 
-              src={`/photobook-9mo4/${photo.filename}`}
-              alt={`photo-${index}`} 
-              width="420" height="420"
-              crop={{ type: "auto", source: true }}
-              className="w-full h-auto rounded-lg shadow-lg cursor-pointer transition-transform transform hover:scale-105"
-              onClick={() => {
-                const img = new window.Image()
-                img.src = `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/v1/photobook-9mo4/${photo.filename}`
-                const viewer = window.open("", "_blank")
-                viewer?.document.write(img.outerHTML)
-                viewer?.document.close()
-              }}
-            />
-            <div className="absolute bottom-2 left-2 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded">
-              Click to enlarge
-            </div>
-          </div>
+          <SwiperSlide key={index}>
+            <PhotoCard photo={photo} />
+          </SwiperSlide>
         ))}
-      </div>
-
-      {/* <CommentContainer /> */}
+      </Swiper>
     </div>
   )
 }
