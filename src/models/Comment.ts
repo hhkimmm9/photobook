@@ -1,18 +1,15 @@
-import { Schema, model } from "mongoose"
+import { Schema, model, models } from "mongoose"
 import { IComment } from "@/interfaces"
 
 const commentSchema = new Schema<IComment>({
+  photoId: { type: Schema.Types.String, ref: "Photo", required: true },
   username: { type: String, required: true },
-  // albumId: { type: Schema.Types.String, ref: "Album", required: true },
-  albumId: { type: String, required: true },
-  comment: { type: String, required: true },
+  text: { type: String, required: true },
   password: { type: String, required: true },
-  // createdAt: { type: Date, default: Date.now },
-  // updatedAt: { type: Date, default: Date.now }
-  createdAt: { type: String, required: true },
-  updatedAt: { type: String, required: true }
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now }
 })
 
-const Comment = model<IComment>("Comment", commentSchema)
+const Comment = models.Comment || model<IComment>("Comment", commentSchema)
 
 export default Comment
