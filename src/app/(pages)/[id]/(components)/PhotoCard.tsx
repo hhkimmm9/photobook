@@ -1,18 +1,19 @@
-import { IPhoto } from '@/interfaces'
-import { CldImage } from 'next-cloudinary'
-import CommentContainer from "@/app/(pages)/[id]/(comments)/CommentContainer"
+import { IPhoto, IComment } from "@/interfaces"
+import { CldImage } from "next-cloudinary"
 
 interface PhotoCardProps {
-  photo: IPhoto;
+  photo: IPhoto
+  topComment: IComment
 }
 
-const PhotoCard = ({ photo }: PhotoCardProps) => {
+const PhotoCard = ({ photo, topComment }: PhotoCardProps) => {
   return (
     <div className="p-4 shadow-xl bg-stone-50">
+      {/* photos */}
       <div className="relative">
         <CldImage 
           src={`/photobook-9mo4/${photo.filename}`}
-          alt={`photo-${photo._id}`} 
+          alt={`photo-${photo._id}`}
           width="420" height="420"
           crop={{ type: "auto", source: true }}
           className="w-full h-auto shadow-lg cursor-pointer"
@@ -26,12 +27,16 @@ const PhotoCard = ({ photo }: PhotoCardProps) => {
             viewer?.document.close()
           }}
         />
-        <div className="absolute bottom-6 left-6 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded">
+        <div className="
+          absolute bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded
+          bottom-2 left-2
+        ">
           Click to enlarge
         </div>
       </div>
-
-      <CommentContainer />
+      <div className="min-h-24">
+        {topComment?.text}
+      </div>
     </div>
   )
 }

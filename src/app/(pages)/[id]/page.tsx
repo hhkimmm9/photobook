@@ -6,7 +6,8 @@ import { useState, useEffect, FormEvent } from "react"
 import { Swiper, SwiperSlide } from "swiper/react"
 import { Navigation } from "swiper/modules"
 import 'swiper/css'
-import PhotoCard from "./PhotoCard"
+import PhotoCard from "./(components)/PhotoCard"
+import CommentContainer from "./(components)/CommentContainer"
 import { IAlbum, IPhoto } from "@/interfaces"
 
 const ITS_OKAY_TO_BE_EXPOSED = "cheese"
@@ -92,7 +93,11 @@ const Page = () => {
       >
         {photos?.map((photo, index) => (
           <SwiperSlide key={index}>
-            <PhotoCard photo={photo} />
+            { 1 ? (
+              <PhotoCard photo={photo} topComment={photo.comments[0]} />
+            ) : (
+              <CommentContainer comments={photo.comments} flipCard={() => {}} />
+            )}
           </SwiperSlide>
         ))}
       </Swiper>
