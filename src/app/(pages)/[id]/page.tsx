@@ -1,34 +1,53 @@
 "use client"
 
-import { useEffect, useState, FormEvent } from "react"
-import album_list from "@/json/album_list.json"
-import { IAlbum } from "@/interfaces"
+import { useParams } from "next/navigation"
+import { useState, useEffect, FormEvent } from "react"
+
 import { Swiper, SwiperSlide } from "swiper/react"
 import { Navigation } from "swiper/modules"
 import 'swiper/css'
-import { usePathname } from "next/navigation"
 import PhotoCard from "./PhotoCard"
+import { IAlbum, IPhoto } from "@/interfaces"
 
 const ITS_OKAY_TO_BE_EXPOSED = "cheese"
 
 const Page = () => {
-  const pathname = usePathname()
+  const params = useParams()
+
   const [state, setState] = useState({
     hasAccess: true,
-    album: null as IAlbum | null,
     pwd: "",
     warningMessage: ""
   })
+  const [album, setAlbum] = useState<IAlbum>()
+  const [photos, setPhotos] = useState<IPhoto[]>()
 
   useEffect(() => {
-    if (state.hasAccess) {
-      album_list.albums.find(album => {
-        if (album.path === pathname) {
-          setState({ ...state, album })
-        }
-      })  
+    const fetchAlbumAndPhotos = async () => {
+      try {
+        const [albumResponse, photosResponse] = await Promise.all([
+          fetch(`/api/albums/${params.id}`, {
+            method: 'GET',
+            headers: { "Content-Type": "application/json" }
+          }),
+          fetch(`/api/photos?albumId=${params.id}`, {
+            method: 'GET',
+            headers: { "Content-Type": "application/json" }
+          })
+        ])
+
+        const { album } = await albumResponse.json()
+        const { photos } = await photosResponse.json()
+
+        setAlbum(album)
+        setPhotos(photos)
+      } catch (error) {
+        console.error("Error fetching album or photos", error)
+      }
     }
-  }, [state.hasAccess, pathname])
+
+    if (state.hasAccess) fetchAlbumAndPhotos()
+  }, [params.id, state.hasAccess])
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -60,8 +79,8 @@ const Page = () => {
     <div className="pb-8">
       {/* Album title and date */}
       <div className="text-center mb-8">
-        <h1 className="font-bold text-2xl text-gray-800">{state.album?.title}</h1>
-        <p className="text-sm text-gray-500">{state.album?.date}</p>
+        <h1 className="font-bold text-2xl text-gray-800">{album?.title}</h1>
+        <p className="text-sm text-gray-500">{new Date(album?.date ?? "").toDateString()}</p>
       </div>
 
       <Swiper
@@ -71,7 +90,7 @@ const Page = () => {
         onSlideChange={() => console.log('slide change')}
         onSwiper={(swiper) => console.log(swiper)}
       >
-        {state.album?.photos.map((photo, index) => (
+        {photos?.map((photo, index) => (
           <SwiperSlide key={index}>
             <PhotoCard photo={photo} />
           </SwiperSlide>

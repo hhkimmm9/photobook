@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server"
 import { connectToDB } from "@/utils/db"
-import Comment from '@/models/Comment'
+import { Comment } from '@/models'
 
 export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {

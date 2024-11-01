@@ -10,13 +10,16 @@ export interface IComment extends Document {
   updatedAt: Date
 }
 
-export interface IPhoto {
+export interface IPhoto extends Document {
+  _id: string
+  albumId: string
   filename: string
   type: string
   url: string
   format: string
   comments: IComment[]
   createdAt: Date
+  updatedAt: Date
 }
 
 export interface IAlbum extends Document {
@@ -27,7 +30,7 @@ export interface IAlbum extends Document {
   description: string
   password: string
   path: string
-  photos: IPhoto[]
+  photos: Schema.Types.ObjectId[]
   createdAt: Date
   updatedAt: Date
 }

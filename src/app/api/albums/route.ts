@@ -1,8 +1,24 @@
-import { connectToDB } from "@/utils/db";
-import cloudinary from "@/utils/cloudinaryConfig";
-import Album from "@/models/Album";
 import { NextResponse, type NextRequest } from "next/server";
+import { connectToDB } from "@/utils/db";
+import { Album, Photo } from "@/models";
+import cloudinary from "@/utils/cloudinaryConfig";
 import { Readable } from 'stream';
+import { Schema } from "mongoose";
+
+export async function GET() {
+  try {
+    await connectToDB();
+    console.log("Connected to DB");
+
+    const albums = await Album.find({}).exec();
+    console.log("Albums fetched", albums);
+
+    return NextResponse.json({ albums }, { status: 200 });
+  } catch (error) {
+    console.error("Error fetching albums", error);
+    return NextResponse.json({ message: "Error fetching albums", error }, { status: 500 });
+  }
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -33,7 +49,8 @@ export async function POST(req: NextRequest) {
 
     // Upload thumbnail image to Cloudinary
     const thumbnailUpload = await new Promise<string>(async (resolve, reject) => {
-      const uploadStream = cloudinary.uploader.upload_stream({ resource_type: 'image', folder: 'photobook-9mo4' }, (error, result) => {
+      const uploadStream = cloudinary.uploader.upload_stream({
+        resource_type: 'image', folder: 'photobook-9mo4' }, (error, result) => {
         if (error) {
           console.error("Thumbnail upload error", error);
           reject(error);
@@ -49,30 +66,47 @@ export async function POST(req: NextRequest) {
     });
     console.log("Thumbnail uploaded", thumbnailUpload);
 
-    // Upload photos to Cloudinary
-    const photoObjects = await Promise.all(photos.map(async (photo) => {
-      return new Promise<{
-        filename: string,
-        type: "image" | "video" | "raw" | "auto",
-        url: string,
-        format: string,
-        comments: string[]
-        created_at: string
-      }>(async (resolve, reject) => {
-        const uploadStream = cloudinary.uploader.upload_stream({ resource_type: 'image', folder: 'photobook-9mo4' }, (error, result) => {
+    // Step 1: Create the album without photos to get the albumId
+    const createdAlbum = new Album({
+      title,
+      thumbnailImage: thumbnailUpload,
+      description,
+      password,
+      path,
+      photos: [], // Initially, no photos
+      createdAt: new Date(),
+      updatedAt: new Date()
+    });
+
+    const savedAlbum = await createdAlbum.save();
+    const albumId = savedAlbum._id;
+    console.log("Album created", savedAlbum);
+    
+    // Step 2: Upload photos to Cloudinary and save to Photo collection
+    const photoIds = await Promise.all(photos.map(async (photo) => {
+      return new Promise<Schema.Types.ObjectId>(async (resolve, reject) => {
+        const uploadStream = cloudinary.uploader.upload_stream({ resource_type: 'image', folder: 'photobook-9mo4' }, async (error, result) => {
           if (error) {
             console.error("Photo upload error", error);
             reject(error);
           }
           if (result) {
-            resolve({
-              filename: result.display_name,
-              type: result.resource_type,
-              url: result.secure_url,
-              format: result.format,
-              comments: [],
-              created_at: result.created_at
-            });
+            try {
+              const newPhoto = new Photo({
+                albumId,
+                filename: result.display_name,
+                type: result.resource_type,
+                url: result.secure_url,
+                format: result.format,
+                comments: [],
+                createdAt: new Date(result.created_at),
+                updatedAt: new Date(result.created_at)
+              });
+              const savedPhoto = await newPhoto.save();
+              resolve(savedPhoto._id);
+            } catch (saveError) {
+              reject(saveError);
+            }
           } else {
             reject(new Error("Upload failed, result is undefined"));
           }
@@ -81,23 +115,14 @@ export async function POST(req: NextRequest) {
         nodeStream.pipe(uploadStream);
       });
     }));
-    console.log("Photos uploaded", photoObjects);
+    console.log("Photos uploaded and saved to Photo collection", photoIds);
 
-    const createdAlbum = new Album({
-      title,
-      thumbnailImage: thumbnailUpload,
-      description,
-      password,
-      path,
-      photos: photoObjects,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    });
+    // Step 3: Update the album with the list of photo IDs
+    savedAlbum.photos = photoIds;
+    await savedAlbum.save();
+    console.log("Album updated with photos", savedAlbum);
 
-    await createdAlbum.save();
-    console.log("Album created", createdAlbum);
-
-    return NextResponse.json({ createdAlbum }, { status: 200 });
+    return NextResponse.json({ savedAlbum }, { status: 200 });
   } catch (error) {
     console.error("Error creating album", error);
     return NextResponse.json({ message: "Error creating album", error }, { status: 500 });
