@@ -1,44 +1,86 @@
 import { IPhoto, IComment } from "@/interfaces"
 import { CldImage } from "next-cloudinary"
+import {
+  // ShareIcon,
+  ChatBubbleBottomCenterTextIcon
+} from "@heroicons/react/24/solid"
 
 interface PhotoCardProps {
-  photo: IPhoto
-  topComment: IComment
+  photo: IPhoto & { comments: IComment[] }
+  showPhoto: () => void
 }
 
-const PhotoCard = ({ photo, topComment }: PhotoCardProps) => {
+const PhotoCard = ({ photo, showPhoto }: PhotoCardProps) => {
+  const getTopComment = (comments: IComment[]): IComment | null => {
+    return comments.length ? comments.reduce((topComment, currentComment) => 
+      currentComment.vote > topComment.vote ? currentComment : topComment
+    ) : null;
+  };
+
+  const handleImageClick = (filename: string) => {
+    const img = new window.Image();
+    img.src = `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/v1/photobook-9mo4/${filename}`;
+    img.style.maxWidth = "95vw";
+    img.style.maxHeight = "95vh";
+    const viewer = window.open("", "_blank");
+    viewer?.document.write(img.outerHTML);
+    viewer?.document.close();
+  };
+
+  const topComment = getTopComment(photo.comments);
+
   return (
-    <div className="p-4 shadow-xl bg-stone-50">
-      {/* photos */}
-      <div className="relative">
-        <CldImage 
-          src={`/photobook-9mo4/${photo.filename}`}
-          alt={`photo-${photo._id}`}
-          width="420" height="420"
-          crop={{ type: "auto", source: true }}
-          className="w-full h-auto shadow-lg cursor-pointer"
-          onClick={() => {
-            const img = new window.Image()
-            img.src = `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/v1/photobook-9mo4/${photo.filename}`
-            img.style.maxWidth = "95vw"
-            img.style.maxHeight = "95vh"
-            const viewer = window.open("", "_blank")
-            viewer?.document.write(img.outerHTML)
-            viewer?.document.close()
-          }}
-        />
-        <div className="
-          absolute bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded
-          bottom-2 left-2
-        ">
-          Click to enlarge
+    <div className="h-full flex flex-col gap-3">
+      {/* photo and top comment */}
+      <div className="h-full p-4 flex flex-col bg-stone-50">
+        {/* photos */}
+        <div className="relative">
+          <CldImage 
+            src={`/photobook-9mo4/${photo.filename}`}
+            alt={`photo-${photo._id}`}
+            width="420" height="420"
+            crop={{ type: "auto", source: true }}
+            className="w-full h-auto cursor-pointer"
+            onClick={() => handleImageClick(photo.filename)}
+          />
+          <div className="
+            absolute bottom-2 left-2 bg-black bg-opacity-50
+            px-2 py-1 rounded text-xs text-white cursor-pointer
+          ">
+            Click to enlarge
+          </div>
+        </div>
+
+        {/* top comment */} 
+        <div className="flex-grow mt-4">
+          <div className="flex justify-center items-center h-full text-xl"
+            style={{ fontFamily: "'Dancing Script', cursive" }}
+          >
+            {topComment?.text ?? "No comments available"}
+          </div>
         </div>
       </div>
-      <div className="min-h-24">
-        {topComment?.text}
+
+      {/* actions icons */}
+      <div className="mr-2 grid justify-end">
+        <div className="flex gap-2">
+          {/* share */}
+          {/* <button onClick={() => {}} className="
+            w-full p-2 bg-stone-500 text-white rounded-full font-medium
+          ">
+            <ShareIcon className="size-5" />
+          </button> */}
+          
+          {/* see comments */}
+          <button onClick={showPhoto} className="
+            w-full p-2 bg-stone-500 text-white rounded-full font-medium
+          ">
+            <ChatBubbleBottomCenterTextIcon className="size-5" />
+          </button>
+        </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default PhotoCard
+export default PhotoCard;

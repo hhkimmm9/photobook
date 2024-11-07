@@ -1,13 +1,16 @@
 "use client"
 
-import { useParams } from "next/navigation"
-import { useState, useEffect, FormEvent } from "react"
-
 import { Swiper, SwiperSlide } from "swiper/react"
 import { Navigation } from "swiper/modules"
 import 'swiper/css'
+
+import { useParams } from "next/navigation"
+import { useState, useEffect, FormEvent } from "react"
+
 import PhotoCard from "./(components)/PhotoCard"
 import CommentContainer from "./(components)/CommentContainer"
+import { ArrowsRightLeftIcon } from "@heroicons/react/24/solid"
+
 import { IAlbum, IPhoto } from "@/interfaces"
 
 const ITS_OKAY_TO_BE_EXPOSED = "cheese"
@@ -18,7 +21,8 @@ const Page = () => {
   const [state, setState] = useState({
     hasAccess: true,
     pwd: "",
-    warningMessage: ""
+    warningMessage: "",
+    showPhoto: true
   })
   const [album, setAlbum] = useState<IAlbum>()
   const [photos, setPhotos] = useState<IPhoto[]>()
@@ -88,19 +92,33 @@ const Page = () => {
         modules={[Navigation]}
         spaceBetween={50}
         slidesPerView={1}
-        onSlideChange={() => console.log('slide change')}
+        onSlideChange={() => {setState({ ...state, showPhoto: true })}}
         onSwiper={(swiper) => console.log(swiper)}
       >
         {photos?.map((photo, index) => (
           <SwiperSlide key={index}>
-            { 1 ? (
-              <PhotoCard photo={photo} topComment={photo.comments[0]} />
-            ) : (
-              <CommentContainer comments={photo.comments} flipCard={() => {}} />
-            )}
+            <div className="h-[30rem] lg:h-[34rem]">
+              { state.showPhoto ? (
+                <PhotoCard
+                  photo={photo}
+                  showPhoto={() => setState({ ...state, showPhoto: !state.showPhoto})}
+                />
+              ) : (
+                <CommentContainer
+                  comments={photo.comments}
+                  photoId={photo._id}
+                  showPhoto={() => setState({ ...state, showPhoto: !state.showPhoto})}
+                />
+              )}
+            </div>
           </SwiperSlide>
         ))}
       </Swiper>
+
+      <div className="shake mt-16 grid justify-items-center text-lg space-y-2">
+        <ArrowsRightLeftIcon className="size-6"/>
+        <p>Swipe around to see more photos</p>
+      </div>
     </div>
   )
 }

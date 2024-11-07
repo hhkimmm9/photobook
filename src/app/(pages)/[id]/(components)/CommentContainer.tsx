@@ -1,26 +1,43 @@
 "use client"
 
+import { useState } from "react"
+import CommentItem from "./CommentItem"
+import AddCommentForm from "./AddCommentForm"
 import { IComment } from "@/interfaces"
 
 interface ICommentContainerProps {
   comments: IComment[]
-  flipCard: () => void
+  photoId: string
+  showPhoto: () => void
 }
 
-const CommentContainer = ({ comments, flipCard }: ICommentContainerProps ) => {
+const CommentContainer = ({ comments, photoId, showPhoto }: ICommentContainerProps ) => {
+  const [showForm, setShowForm] = useState(false);
+
   return (
-    <div className="min-h-24">
-      {comments.map(comment => (
-        <div key={comment._id} className="flex gap-2">
-          <div className="text-xs font-medium">{comment.username}</div>
-          <div className="text-xs">{comment.text}</div>
+    <div className="grid grid-rows-[1fr_auto] gap-8 h-full bg-white rounded-lg">
+      {!showForm ? (
+        // comments
+        <div className="w-full overflow-y-auto p-3">
+          {comments.map(comment => <CommentItem key={comment._id} comment={comment} />)}
         </div>
-      ))}
-      <div className="flex justify-center mt-2">
-        <button onClick={flipCard} className="text-xs text-gray-500 hover:text-gray-700">
-          {comments.length ? "Hide" : "Show"} comments
-        </button>
-      </div>
+      ) : (
+        // form to add a comment
+        <AddCommentForm photoId={photoId} setShowForm={() => setShowForm(prev => !prev)} />
+      )}
+
+      {!showForm && (
+        // buttons: see photo & add a comment
+        <div className="grid grid-cols-2 gap-2 p-3">
+          <button type="button" onClick={() => showPhoto()}
+            className="border rounded-lg py-2 font-semibold text-gray-700
+          ">Flip</button>
+          <button
+            className="bg-blue-500 text-white rounded-lg py-2 font-semibold"
+            onClick={() => setShowForm(prev => !prev)}
+          >Add a comment</button>
+        </div>
+      )}
     </div>
   )
 }
