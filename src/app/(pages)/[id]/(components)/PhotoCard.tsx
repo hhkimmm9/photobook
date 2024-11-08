@@ -1,16 +1,38 @@
-import { IPhoto, IComment } from "@/interfaces"
+"use client"
+
+import { useState, useEffect } from "react"
 import { CldImage } from "next-cloudinary"
-import {
-  // ShareIcon,
-  ChatBubbleBottomCenterTextIcon
-} from "@heroicons/react/24/solid"
+import { ChatBubbleBottomCenterTextIcon } from "@heroicons/react/24/solid"
+import { IPhoto, IComment } from "@/interfaces"
 
 interface PhotoCardProps {
-  photo: IPhoto & { comments: IComment[] }
+  photo: IPhoto
   showPhoto: () => void
 }
 
 const PhotoCard = ({ photo, showPhoto }: PhotoCardProps) => {
+  const [state, setState] = useState({
+    comments: null as IComment[] | null
+  })
+
+  useEffect(() => {
+    const fetchComments = async () => {
+      try {
+        const res = await fetch(`/api/comments?photoId=${photo._id}`, {
+          method: "GET",
+          headers: { "Content-Type": "application/json" }
+        })
+
+        const { comments } = await res.json()
+        setState({ comments })
+      } catch (error) {
+        console.error("Error fetching comments", error)
+      }
+    }
+
+    fetchComments()
+  }, [photo._id])
+
   const getTopComment = (comments: IComment[]): IComment | null => {
     return comments.length ? comments.reduce((topComment, currentComment) => 
       currentComment.vote > topComment.vote ? currentComment : topComment
@@ -27,7 +49,7 @@ const PhotoCard = ({ photo, showPhoto }: PhotoCardProps) => {
     viewer?.document.close();
   };
 
-  const topComment = getTopComment(photo.comments);
+  const topComment = getTopComment(state.comments ?? []);
 
   return (
     <div className="h-full flex flex-col gap-3">

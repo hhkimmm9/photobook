@@ -19,7 +19,6 @@ export interface IPhoto extends Document {
   type: string
   url: string
   format: string
-  comments: IComment[]
   createdAt: Date
   updatedAt: Date
 }

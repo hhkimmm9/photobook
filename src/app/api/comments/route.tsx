@@ -2,10 +2,25 @@ import { NextResponse, type NextRequest } from "next/server";
 import { connectToDB } from "@/utils/db";
 import { Photo, Comment } from "@/models";
 
-export async function GET() {
+export async function GET(req: NextRequest) {
+  const url = new URL(req.url);
+  const photoId = url.searchParams.get("photoId");
+
   try {
     await connectToDB();
     console.log("Connected to DB");
+
+    if (photoId) {
+      try {
+        const comments = await Comment.find({ photoId });
+        console.log("Comments found:", comments);
+  
+        return NextResponse.json({ comments }, { status: 200 });
+      } catch (error) {
+        console.error("Error fetching comments with given photoId", error);
+        return NextResponse.json({ message: "Error fetching comments with given photoId", error }, { status: 500 });
+      }
+    }
 
     const comments = await Comment.find();
     console.log("Comments found:", comments);

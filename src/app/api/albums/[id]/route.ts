@@ -2,8 +2,8 @@ import { NextResponse, type NextRequest } from "next/server";
 import { connectToDB } from "@/utils/db";
 import { Album } from "@/models";
 
-export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const id = (await params).id
+export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+  const id = params.id
   
   try {
     await connectToDB();
