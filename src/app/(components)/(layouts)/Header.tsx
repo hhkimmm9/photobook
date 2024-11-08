@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 const Header = () => {
   return (
@@ -7,10 +8,12 @@ const Header = () => {
       backdrop-blur bg-opacity-70 bg-white
       flex items-center justify-center
     ">
-      <Image src="/images/logo.png" alt="Logo - Harrison's Photobook"
-        width={300} height={168}
-        className="object-contain h-full"
-      />
+      <Link href="/">
+        <Image src="/images/logo.png" alt="Logo - Harrison's Photobook"
+          width={300} height={168}
+          className="object-contain h-full"
+        />
+      </Link>
     </header>
   );
 };
