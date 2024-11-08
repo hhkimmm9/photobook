@@ -1,5 +1,8 @@
 "use client"
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import { Swiper, SwiperSlide } from "swiper/react"
 import { Navigation } from "swiper/modules"
 import 'swiper/css'
@@ -17,6 +20,11 @@ const ITS_OKAY_TO_BE_EXPOSED = "cheese"
 
 const Page = () => {
   const params = useParams()
+
+  const notify = () => toast("Woohoo! You liked this album! Now, how about treating me to a coffee? ☕️", {
+    autoClose: false,
+    closeOnClick: true
+  });
 
   const [state, setState] = useState({
     hasAccess: true,
@@ -53,6 +61,16 @@ const Page = () => {
 
     if (state.hasAccess) fetchAlbumAndPhotos()
   }, [params.id, state.hasAccess])
+
+  const handleSendCopyRequest = () => {
+    window.location.href = `
+      mailto:harrisonkim911@gmail.com?
+      subject=Request for a copy of ${album?.title}&
+      body=I love this album!: ${window.location.href}
+    `
+
+    notify()
+  }
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -102,6 +120,7 @@ const Page = () => {
                 <PhotoCard
                   photo={photo}
                   showPhoto={() => setState({ ...state, showPhoto: !state.showPhoto})}
+                  sendCopyRequest={handleSendCopyRequest}
                 />
               ) : (
                 <CommentContainer
@@ -118,6 +137,12 @@ const Page = () => {
         <ArrowsRightLeftIcon className="size-6"/>
         <p>Swipe around to see more photos</p>
       </div>
+
+      <ToastContainer
+        position="bottom-center"
+        autoClose={false}
+        closeOnClick
+      />
     </div>
   )
 }
