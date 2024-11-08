@@ -7,9 +7,9 @@ const Header = () => {
       backdrop-blur bg-opacity-70 bg-white
       flex items-center justify-center
     ">
-      <Image src="/images/harrison.png" alt="Logo - Harrison"
+      <Image src="/images/logo.png" alt="Logo - Harrison's Photobook"
         width={300} height={168}
-        className="object-contain invert h-full"
+        className="object-contain h-full"
       />
     </header>
   );
