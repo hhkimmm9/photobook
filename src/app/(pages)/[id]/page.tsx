@@ -1,32 +1,76 @@
 "use client"
 
-import album_list from "@/json/album_list.json"
-import { IAlbum } from "@/interfaces"
-import { usePathname } from "next/navigation"
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+import { Swiper, SwiperSlide } from "swiper/react"
+import { Navigation } from "swiper/modules"
+import 'swiper/css'
+
+import { useParams } from "next/navigation"
 import { useState, useEffect, FormEvent } from "react"
-import { CldImage } from 'next-cloudinary';
-// import CommentContainer from "@/app/(components)/(comments)/CommentContainer"
+
+import PhotoCard from "./(components)/PhotoCard"
+import CommentContainer from "./(components)/CommentContainer"
+import { ArrowsRightLeftIcon } from "@heroicons/react/24/solid"
+
+import { IAlbum, IPhoto } from "@/interfaces"
 
 const ITS_OKAY_TO_BE_EXPOSED = "cheese"
 
 const Page = () => {
-  const pathname = usePathname()
+  const params = useParams()
+
+  const notify = () => toast("Woohoo! You liked this album! Now, how about treating me to a coffee? ☕️", {
+    autoClose: false,
+    closeOnClick: true
+  });
+
   const [state, setState] = useState({
-    hasAccess: false,
-    album: null as IAlbum | null,
+    hasAccess: true,
     pwd: "",
-    warningMessage: ""
+    warningMessage: "",
+    showPhoto: true
   })
+  const [album, setAlbum] = useState<IAlbum>()
+  const [photos, setPhotos] = useState<IPhoto[]>()
 
   useEffect(() => {
-    if (state.hasAccess) {
-      album_list.albums.find(album => {
-        if (album.path === pathname) {
-          setState({ ...state, album })
-        }
-      })  
+    const fetchAlbumAndPhotos = async () => {
+      try {
+        const [albumResponse, photosResponse] = await Promise.all([
+          fetch(`/api/albums/${params.id}`, {
+            method: 'GET',
+            headers: { "Content-Type": "application/json" }
+          }),
+          fetch(`/api/photos?albumId=${params.id}`, {
+            method: 'GET',
+            headers: { "Content-Type": "application/json" }
+          })
+        ])
+
+        const { album } = await albumResponse.json()
+        const { photos } = await photosResponse.json()
+
+        setAlbum(album)
+        setPhotos(photos)
+      } catch (error) {
+        console.error("Error fetching album or photos", error)
+      }
     }
-  }, [state.hasAccess, pathname])
+
+    if (state.hasAccess) fetchAlbumAndPhotos()
+  }, [params.id, state.hasAccess])
+
+  const handleSendCopyRequest = () => {
+    window.location.href = `
+      mailto:harrisonkim911@gmail.com?
+      subject=Request for a copy of ${album?.title}&
+      body=I love this album!: ${window.location.href}
+    `
+
+    notify()
+  }
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -38,6 +82,7 @@ const Page = () => {
   }
 
   return !state.hasAccess ? (
+    // Password form
     <div className="flex items-center justify-center h-[calc(100vh-7rem)]">
       <form onSubmit={handleSubmit} className="w-64 flex flex-col gap-4 items-center justify-center">
         <input
@@ -55,36 +100,49 @@ const Page = () => {
     </div>
   ) : (
     <div className="pb-8">
+      {/* Album title and date */}
       <div className="text-center mb-8">
-        <h1 className="font-bold text-2xl text-gray-800">{state.album?.title}</h1>
-        <p className="text-sm text-gray-500">{state.album?.date}</p>
+        <h1 className="font-bold text-2xl text-gray-800">{album?.title}</h1>
+        <p className="text-sm text-gray-500">{new Date(album?.date ?? "").toDateString()}</p>
       </div>
 
-      <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8">
-        {state.album?.photos.map((photo, index) => (
-          <div key={index} className="relative">
-            <CldImage 
-              src={`/photobook-9mo4/${photo.filename}`}
-              alt={`photo-${index}`} 
-              width="420" height="420"
-              crop={{ type: "auto", source: true }}
-              className="w-full h-auto rounded-lg shadow-lg cursor-pointer transition-transform transform hover:scale-105"
-              onClick={() => {
-                const img = new window.Image()
-                img.src = `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/v1/photobook-9mo4/${photo.filename}`
-                const viewer = window.open("", "_blank")
-                viewer?.document.write(img.outerHTML)
-                viewer?.document.close()
-              }}
-            />
-            <div className="absolute bottom-2 left-2 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded">
-              Click to enlarge
+      <Swiper
+        modules={[Navigation]}
+        spaceBetween={50}
+        slidesPerView={1}
+        onSlideChange={() => {setState({ ...state, showPhoto: true })}}
+        onSwiper={(swiper) => console.log(swiper)}
+      >
+        {photos?.map((photo, index) => (
+          <SwiperSlide key={index}>
+            <div className="h-[30rem] lg:h-[34rem]">
+              { state.showPhoto ? (
+                <PhotoCard
+                  photo={photo}
+                  showPhoto={() => setState({ ...state, showPhoto: !state.showPhoto})}
+                  sendCopyRequest={handleSendCopyRequest}
+                />
+              ) : (
+                <CommentContainer
+                  photoId={photo._id}
+                  showPhoto={() => setState({ ...state, showPhoto: !state.showPhoto})}
+                />
+              )}
             </div>
-          </div>
+          </SwiperSlide>
         ))}
+      </Swiper>
+
+      <div className="shake mt-16 grid justify-items-center text-lg space-y-2">
+        <ArrowsRightLeftIcon className="size-6"/>
+        <p>Swipe around to see more photos</p>
       </div>
 
-      {/* <CommentContainer /> */}
+      <ToastContainer
+        position="bottom-center"
+        autoClose={false}
+        closeOnClick
+      />
     </div>
   )
 }
