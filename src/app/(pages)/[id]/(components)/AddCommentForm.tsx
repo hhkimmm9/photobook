@@ -1,11 +1,11 @@
 "use client"
 
-import { SetStateAction, useState } from "react"
+import { useState } from "react"
 
 const WARNING_MESSAGE_MISSING_INPUTS = "Please enter a username and password"
 const WARNING_MESSAGE_TEXT_LENGTH_LIMIT = "Comment must be less than 128 characters"
 
-const AddCommentForm = ({ photoId, setShowForm }: { photoId: string, setShowForm: (value: SetStateAction<boolean>) => void }) => {
+const AddCommentForm = ({ photoId, setShowForm }: { photoId: string, setShowForm: () => void }) => {
   const [formData, setFormData] = useState({ text: "", username: "", password: "" })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -47,8 +47,9 @@ const AddCommentForm = ({ photoId, setShowForm }: { photoId: string, setShowForm
         throw new Error("Failed to post comment")
       }
 
-      const { createdComment } = await res.json()
-      console.log(createdComment)
+      // const { createdComment } = await res.json()
+      // console.log(createdComment)
+      setShowForm()
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : "Failed to post comment")
       console.error(error)
@@ -95,7 +96,7 @@ const AddCommentForm = ({ photoId, setShowForm }: { photoId: string, setShowForm
 
       <div className="row-span-1 grid grid-cols-2 gap-2">
         <button type="button"
-          onClick={() => setShowForm(prev => !prev)}
+          onClick={() => setShowForm()}
           className="border rounded-lg py-2 font-semibold text-gray-700"
         >Cancel</button>
 

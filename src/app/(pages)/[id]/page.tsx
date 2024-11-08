@@ -105,7 +105,7 @@ const Page = () => {
                 />
               ) : (
                 <CommentContainer
-                  comments={photo.comments}
+                  existingComments={photo.comments}
                   photoId={photo._id}
                   showPhoto={() => setState({ ...state, showPhoto: !state.showPhoto})}
                 />

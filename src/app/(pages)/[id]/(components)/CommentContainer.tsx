@@ -1,18 +1,44 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import CommentItem from "./CommentItem"
 import AddCommentForm from "./AddCommentForm"
 import { IComment } from "@/interfaces"
 
 interface ICommentContainerProps {
-  comments: IComment[]
+  existingComments: IComment[]
   photoId: string
   showPhoto: () => void
 }
 
-const CommentContainer = ({ comments, photoId, showPhoto }: ICommentContainerProps ) => {
+const CommentContainer = ({ existingComments, photoId, showPhoto }: ICommentContainerProps ) => {
   const [showForm, setShowForm] = useState(false);
+  const [comments, setComments] = useState<IComment[]>([]);
+
+  useEffect(() => {
+    setComments(existingComments)
+  }, [existingComments])
+
+  const hideFormAndFetch = async () => {
+    try {
+      const res = await fetch("/api/comments", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+
+      if (!res.ok) {
+        throw new Error("Failed to fetch comments")
+      }
+
+      const { comments } = await res.json()
+      setComments(comments)
+      setShowForm(prev => !prev)
+    } catch (error) {
+      console.error("Error fetching comments", error)
+    }
+  }
 
   return (
     <div className="grid grid-rows-[1fr_auto] gap-8 h-full bg-white rounded-lg">
@@ -23,7 +49,7 @@ const CommentContainer = ({ comments, photoId, showPhoto }: ICommentContainerPro
         </div>
       ) : (
         // form to add a comment
-        <AddCommentForm photoId={photoId} setShowForm={() => setShowForm(prev => !prev)} />
+        <AddCommentForm photoId={photoId} setShowForm={hideFormAndFetch} />
       )}
 
       {!showForm && (
