@@ -13,7 +13,7 @@ const LayoutWrapper = ({ children }: { children: ReactNode }) => {
 
       <div className="
         min-h-[calc(100vh-7rem)] mt-16 p-6
-        md:p-12 lg:px-64 2xl:px-80
+        md:p-12 lg:px-80 2xl:px-96
       ">{ children }</div>
 
       {/* <Footer /> */}
