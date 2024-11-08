@@ -16,8 +16,6 @@ import { ArrowsRightLeftIcon } from "@heroicons/react/24/solid"
 
 import { IAlbum, IPhoto } from "@/interfaces"
 
-const ITS_OKAY_TO_BE_EXPOSED = "cheese"
-
 const Page = () => {
   const params = useParams()
 
@@ -74,7 +72,7 @@ const Page = () => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    if (state.pwd === ITS_OKAY_TO_BE_EXPOSED) {
+    if (state.pwd === album?.password) {
       setState({ ...state, hasAccess: true })
     } else {
       setState({ ...state, pwd: "", warningMessage: "Incorrect password" })
