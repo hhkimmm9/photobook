@@ -1,6 +1,12 @@
+import { Dancing_Script } from 'next/font/google';
 import type { Metadata } from "next";
 import "./globals.css";
 import LayoutWrapper from "@/app/(components)/(layouts)/LayoutWrapper";
+
+const dancingScript = Dancing_Script({
+  subsets: ['latin'],
+  weight: ['400', '700'],
+});
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -13,7 +19,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className={dancingScript.className}>
       <body className="antialiased">
         <LayoutWrapper>
           { children }

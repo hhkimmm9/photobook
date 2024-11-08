@@ -1,19 +1,35 @@
 "use client"
 
 import { IAlbum } from "@/interfaces"
-import album_list from "@/json/album_list.json"
 import { CldImage } from 'next-cloudinary'
 import Link from "next/link"
+import { useState, useEffect } from "react"
 
 export default function Home() {
+  const [albums, setAlbums] = useState<IAlbum[]>([])
+  
+  useEffect(() => {
+    const fetchAlubms = async () => {
+      try {
+        const response = await fetch("/api/albums")
+        const { albums } = await response.json()
+        setAlbums(albums)
+      } catch (error) {
+        console.error("Error fetching albums", error)
+      }
+    }
+
+    fetchAlubms()  
+  }, [])
+  
   return (
     <main>
       <ul className="flex flex-col gap-6">
-        { album_list.albums.map((album: IAlbum) => (
+        { albums.map((album: IAlbum) => (
           <li key={album._id}>
-            <Link href={album.path} scroll={false}>
+            <Link href={album._id} scroll={false}>
               <CldImage
-                src={`/photobook-9mo4/${album.thumbnailImage}`} alt="Thumbnail Image"
+                src={album.thumbnailImage} alt="Thumbnail Image"
                 width="420" height="420"
                 crop={{
                   type: "auto",
@@ -24,7 +40,7 @@ export default function Home() {
               <div className="p-3 shadow-md bg-white">
                 <h2 className="font-medium text-lg">{album.title}</h2>
                 <p className="mt-8 text-end text-sm text-zinc-700">
-                  {album.date}
+                  {new Date(album.date).toDateString()}
                 </p>
               </div>
             </Link>

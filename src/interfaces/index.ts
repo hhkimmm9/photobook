@@ -1,41 +1,34 @@
-// import { Schema, Document } from "mongoose"
-import { Document } from "mongoose"
+import { Schema, Document } from "mongoose"
 
-// export interface IComment extends Document {
-export interface IComment {
-  _id: string
-  username: string
-  // albumId: Schema.Types.ObjectId
-  albumId: string
-  comment: string
-  password: string
-  // createdAt: Date
-  // updatedAt: Date
-  createdAt: string
-  updatedAt: string
-}
-// export interface IAlbum extends Document{
-export interface IAlbum{
+export interface IAlbum extends Document {
   _id: string
   title: string
-  // date: Date
-  date: string
+  date: Date
   thumbnailImage: string
   description: string
-  // photos: Schema.Types.ObjectId[]
-  photos: {
-    _id: string
-    filename: string
-    type: string
-    uploadedDate: string
-  }[]
+  password: string
   path: string
-  // createdAt: Date
-  // updatedAt: Date
-  createdAt: string
-  updatedAt: string
+  photos: Schema.Types.ObjectId[]
+  createdAt: Date
+  updatedAt: Date
 }
 export interface IPhoto extends Document {
   _id: string
-  
+  albumId: string
+  filename: string
+  type: string
+  url: string
+  format: string
+  createdAt: Date
+  updatedAt: Date
+}
+export interface IComment extends Document {
+  _id: string
+  photoId: Schema.Types.ObjectId
+  username: string
+  text: string
+  password: string
+  vote: number
+  createdAt: Date
+  updatedAt: Date
 }
