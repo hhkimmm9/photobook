@@ -2,20 +2,15 @@
 
 import { useState, useEffect } from "react"
 import { CldImage } from "next-cloudinary"
-import { FaCoffee } from "react-icons/fa";
-import {
-  ChatBubbleBottomCenterTextIcon,
-  EnvelopeIcon
-} from "@heroicons/react/24/solid"
+import { ChatBubbleBottomCenterTextIcon } from "@heroicons/react/24/solid"
 import { IPhoto, IComment } from "@/interfaces"
 
 interface PhotoCardProps {
   photo: IPhoto
   showPhoto: () => void
-  sendCopyRequest: () => void
 }
 
-const PhotoCard = ({ photo, showPhoto, sendCopyRequest }: PhotoCardProps) => {
+const PhotoCard = ({ photo, showPhoto }: PhotoCardProps) => {
   const [state, setState] = useState({
     comments: null as IComment[] | null
   })
@@ -83,27 +78,13 @@ const PhotoCard = ({ photo, showPhoto, sendCopyRequest }: PhotoCardProps) => {
           <div className="flex justify-center items-center h-full text-xl"
             style={{ fontFamily: "'Dancing Script', cursive" }}
           >
-            {topComment?.text ?? "No comments available"}
+            {topComment?.text ?? "No comments available yet"}
           </div>
         </div>
       </div>
 
       {/* actions icons */}
-      <div className="mx-2 flex justify-between">
-        <div className="flex gap-2">
-          <button type="button" onClick={() => sendCopyRequest()}
-            className="
-              w-full p-2 bg-stone-500 text-white rounded-full font-medium
-          ">
-          <EnvelopeIcon className="size-5" />
-          </button>
-
-          <button type="button" onClick={() => window.open("https://www.paypal.me/harrisonkim911/2", "_blank")}
-            className="w-full p-2 bg-stone-500 text-white rounded-full font-medium"
-          >
-            <FaCoffee className="w-5" />
-          </button>
-        </div>
+      <div className="mx-2 flex justify-end">
         <div className="flex gap-2">
           {/* share */}
           {/* <button onClick={() => {}} className="
