@@ -139,7 +139,7 @@ const Page = () => {
           ))}
         </Swiper>
 
-        <div className="shake mt-6 grid justify-items-center text-lg space-y-2">
+        <div className="shake mt-4 grid justify-items-center text-lg space-y-2">
           <ArrowsRightLeftIcon className="size-6"/>
             <p>Swipe to see more photos</p>
         </div>
