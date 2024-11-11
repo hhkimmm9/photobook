@@ -124,29 +124,27 @@ const Page = () => {
         >
           {photos?.map((photo, index) => (
             <SwiperSlide key={index}>
-              <div className="h-[30rem] lg:h-[34rem]">
-                { state.showPhoto ? (
-                  <PhotoCard
-                    photo={photo}
-                    showPhoto={() => setState({ ...state, showPhoto: !state.showPhoto})}
-                  />
-                ) : (
-                  <CommentContainer
-                    photoId={photo._id}
-                    showPhoto={() => setState({ ...state, showPhoto: !state.showPhoto})}
-                  />
-                )}
-              </div>
+              { state.showPhoto ? (
+                <PhotoCard
+                  photo={photo}
+                  showPhoto={() => setState({ ...state, showPhoto: !state.showPhoto})}
+                />
+              ) : (
+                <CommentContainer
+                  photoId={photo._id}
+                  showPhoto={() => setState({ ...state, showPhoto: !state.showPhoto})}
+                />
+              )}
             </SwiperSlide>
           ))}
         </Swiper>
 
-        <div className="shake mt-10 grid justify-items-center text-lg space-y-2">
+        <div className="shake mt-6 grid justify-items-center text-lg space-y-2">
           <ArrowsRightLeftIcon className="size-6"/>
             <p>Swipe to see more photos</p>
         </div>
 
-        <div className='mt-6 flex justify-center'>
+        <div className='mt-4 flex justify-center'>
           <div className="w-min flex gap-2">
             <button type="button" onClick={() => sendCopyRequest()}
               className="

@@ -11,8 +11,8 @@ const LayoutWrapper = ({ children }: { children: ReactNode }) => {
       <Header />
 
       <div className="
-        mt-16 p-6
-        md:p-12 lg:px-80 2xl:px-96
+        mt-16 p-6 pb-12 mx-auto
+        max-w-xl md:max-2xl
       ">{ children }</div>
 
       {/* <Footer /> */}

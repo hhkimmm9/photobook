@@ -60,7 +60,7 @@ const PhotoCard = ({ photo, showPhoto }: PhotoCardProps) => {
           <CldImage 
             src={`/photobook-9mo4/${photo.filename}`}
             alt={`photo-${photo._id}`}
-            width="420" height="420"
+            width="420" height="480"  // Adjusted height to maintain 7:8 aspect ratio
             crop={{ type: "auto", source: true }}
             className="w-full h-auto cursor-pointer"
             onClick={() => handleImageClick(photo.filename)}
@@ -75,7 +75,7 @@ const PhotoCard = ({ photo, showPhoto }: PhotoCardProps) => {
 
         {/* top comment */} 
         <div className="flex-grow mt-4">
-          <div className="flex justify-center items-center h-full text-xl"
+          <div className="h-full py-8 flex justify-center items-center text-xl"
             style={{ fontFamily: "'Dancing Script', cursive" }}
           >
             {topComment?.text ?? "No comments available yet"}
