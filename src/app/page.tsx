@@ -23,30 +23,28 @@ export default function Home() {
   }, [])
   
   return (
-    <main>
-      <ul className="flex flex-col gap-6">
-        { albums.map((album: IAlbum) => (
-          <li key={album._id}>
-            <Link href={album._id} scroll={false}>
-              <CldImage
-                src={album.thumbnailImage} alt="Thumbnail Image"
-                width="420" height="420"
-                crop={{
-                  type: "auto",
-                  source: true
-                }}
-                className="w-full"
-              />
-              <div className="p-3 shadow-md bg-white">
-                <h2 className="font-medium text-lg">{album.title}</h2>
-                <p className="mt-8 text-end text-sm text-zinc-700">
-                  {new Date(album.date).toDateString()}
-                </p>
-              </div>
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </main>
+    <ul className="flex flex-col gap-6">
+      { albums.map((album: IAlbum) => (
+        <li key={album._id}>
+          <Link href={album._id} scroll={false}>
+            <CldImage
+              src={album.thumbnailImage} alt="Thumbnail Image"
+              width="420" height="420"
+              crop={{
+                type: "auto",
+                source: true
+              }}
+              className="w-full"
+            />
+            <div className="p-3 shadow-md bg-white">
+              <h2 className="font-medium text-lg">{album.title}</h2>
+              <p className="mt-8 text-end text-sm text-zinc-700">
+                {new Date(album.date).toDateString()}
+              </p>
+            </div>
+          </Link>
+        </li>
+      ))}
+    </ul>
   )
 }

@@ -1,5 +1,10 @@
-import Image from "next/image";
+import { Dancing_Script } from 'next/font/google';
 import Link from "next/link";
+
+const dancingScript = Dancing_Script({
+  subsets: ['latin'],
+  weight: ['400', '700'],
+});
 
 const Header = () => {
   return (
@@ -8,11 +13,8 @@ const Header = () => {
       backdrop-blur bg-opacity-70 bg-white
       flex items-center justify-center
     ">
-      <Link href="/">
-        <Image src="/images/logo.png" alt="Logo - Harrison's Photobook"
-          width={300} height={168}
-          className="object-contain h-full"
-        />
+      <Link href="/" className={`${dancingScript.className} text-3xl`}>
+        Harrison&apos;s Photobook
       </Link>
     </header>
   );

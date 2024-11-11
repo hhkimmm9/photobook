@@ -1,21 +1,22 @@
 "use client"
 
+import { Dancing_Script } from 'next/font/google';
 import { useState, useEffect } from "react"
 import { CldImage } from "next-cloudinary"
-import { FaCoffee } from "react-icons/fa";
-import {
-  ChatBubbleBottomCenterTextIcon,
-  EnvelopeIcon
-} from "@heroicons/react/24/solid"
+import { HiChatBubbleBottomCenterText } from "react-icons/hi2"
 import { IPhoto, IComment } from "@/interfaces"
+
+const dancingScript = Dancing_Script({
+  subsets: ['latin'],
+  weight: ['400', '700'],
+});
 
 interface PhotoCardProps {
   photo: IPhoto
   showPhoto: () => void
-  sendCopyRequest: () => void
 }
 
-const PhotoCard = ({ photo, showPhoto, sendCopyRequest }: PhotoCardProps) => {
+const PhotoCard = ({ photo, showPhoto }: PhotoCardProps) => {
   const [state, setState] = useState({
     comments: null as IComment[] | null
   })
@@ -65,7 +66,7 @@ const PhotoCard = ({ photo, showPhoto, sendCopyRequest }: PhotoCardProps) => {
           <CldImage 
             src={`/photobook-9mo4/${photo.filename}`}
             alt={`photo-${photo._id}`}
-            width="420" height="420"
+            width="420" height="480"  // Adjusted height to maintain 7:8 aspect ratio
             crop={{ type: "auto", source: true }}
             className="w-full h-auto cursor-pointer"
             onClick={() => handleImageClick(photo.filename)}
@@ -80,30 +81,14 @@ const PhotoCard = ({ photo, showPhoto, sendCopyRequest }: PhotoCardProps) => {
 
         {/* top comment */} 
         <div className="flex-grow mt-4">
-          <div className="flex justify-center items-center h-full text-xl"
-            style={{ fontFamily: "'Dancing Script', cursive" }}
-          >
-            {topComment?.text ?? "No comments available"}
+          <div className={`h-full py-8 flex justify-center items-center text-3xl ${dancingScript.className}`}>
+            {topComment?.text ?? "No comments available yet"}
           </div>
         </div>
       </div>
 
       {/* actions icons */}
-      <div className="mx-2 flex justify-between">
-        <div className="flex gap-2">
-          <button type="button" onClick={() => sendCopyRequest()}
-            className="
-              w-full p-2 bg-stone-500 text-white rounded-full font-medium
-          ">
-          <EnvelopeIcon className="size-5" />
-          </button>
-
-          <button type="button" onClick={() => window.open("https://www.paypal.me/harrisonkim911/2", "_blank")}
-            className="w-full p-2 bg-stone-500 text-white rounded-full font-medium"
-          >
-            <FaCoffee className="w-5" />
-          </button>
-        </div>
+      <div className="mx-2 flex justify-end">
         <div className="flex gap-2">
           {/* share */}
           {/* <button onClick={() => {}} className="
@@ -116,7 +101,7 @@ const PhotoCard = ({ photo, showPhoto, sendCopyRequest }: PhotoCardProps) => {
           <button onClick={showPhoto} className="
             w-full p-2 bg-stone-500 text-white rounded-full font-medium
           ">
-            <ChatBubbleBottomCenterTextIcon className="size-5" />
+            <HiChatBubbleBottomCenterText className="text-xl" />
           </button>
         </div>
       </div>

@@ -97,11 +97,11 @@ const AddCommentForm = ({ photoId, setShowForm }: { photoId: string, setShowForm
       <div className="row-span-1 grid grid-cols-2 gap-2">
         <button type="button"
           onClick={() => setShowForm()}
-          className="border rounded-lg py-2 font-semibold text-gray-700"
+          className="border rounded-lg py-2 font-semibold text-gray-700 hover:bg-gray-200"
         >Cancel</button>
 
         <button type="submit" disabled={loading}
-          className="bg-blue-500 text-white rounded-lg py-2 font-semibold"
+          className="bg-stone-500 text-white rounded-lg py-2 font-semibold hover:bg-stone-600"
         >{loading ? "Posting..." : "Post"}</button>
       </div>
       {error && <p className="text-red-500">{error}</p>}
