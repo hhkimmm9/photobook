@@ -10,9 +10,15 @@ import 'swiper/css'
 import { useParams } from "next/navigation"
 import { useState, useEffect, FormEvent } from "react"
 
+import Link from "next/link"
 import PhotoCard from "./(components)/PhotoCard"
 import CommentContainer from "./(components)/CommentContainer"
-import { ArrowsRightLeftIcon } from "@heroicons/react/24/solid"
+import { FaCoffee } from "react-icons/fa"
+import {
+  HiArrowsRightLeft,
+  HiChevronLeft,
+  HiEnvelope
+} from "react-icons/hi2"
 
 import { IAlbum, IPhoto } from "@/interfaces"
 
@@ -60,7 +66,7 @@ const Page = () => {
     if (state.hasAccess) fetchAlbumAndPhotos()
   }, [params.id, state.hasAccess])
 
-  const handleSendCopyRequest = () => {
+  const sendCopyRequest = () => {
     window.location.href = `
       mailto:harrisonkim911@gmail.com?
       subject=Request for a copy of ${album?.title}&
@@ -81,7 +87,7 @@ const Page = () => {
 
   return !state.hasAccess ? (
     // Password form
-    <div className="flex items-center justify-center h-[calc(100vh-7rem)]">
+    <div className="flex items-center justify-center">
       <form onSubmit={handleSubmit} className="w-64 flex flex-col gap-4 items-center justify-center">
         <input
           type="password"
@@ -97,28 +103,31 @@ const Page = () => {
       </form>
     </div>
   ) : (
-    <div className="pb-8">
-      {/* Album title and date */}
-      <div className="text-center mb-8">
-        <h1 className="font-bold text-2xl text-gray-800">{album?.title}</h1>
-        <p className="text-sm text-gray-500">{new Date(album?.date ?? "").toDateString()}</p>
-      </div>
+    <>
+      <>
+        <Link href="/" className='flex justify-start mb-4'>
+          <HiChevronLeft className="text-xl transition-transform duration-200 hover:scale-150" />
+        </Link>
 
-      <Swiper
-        modules={[Navigation]}
-        spaceBetween={50}
-        slidesPerView={1}
-        onSlideChange={() => {setState({ ...state, showPhoto: true })}}
-        onSwiper={(swiper) => console.log(swiper)}
-      >
-        {photos?.map((photo, index) => (
-          <SwiperSlide key={index}>
-            <div className="h-[30rem] lg:h-[34rem]">
+        {/* Album title and date */}
+        <div className="mb-6 text-center">
+          <h1 className="font-bold text-2xl text-gray-800">{album?.title}</h1>
+          <p className="text-sm text-gray-500">{new Date(album?.date ?? "").toDateString()}</p>
+        </div>
+
+        <Swiper
+          modules={[Navigation]}
+          spaceBetween={50}
+          slidesPerView={1}
+          onSlideChange={() => {setState({ ...state, showPhoto: true })}}
+          onSwiper={(swiper) => console.log(swiper)}
+        >
+          {photos?.map((photo, index) => (
+            <SwiperSlide key={index}>
               { state.showPhoto ? (
                 <PhotoCard
                   photo={photo}
                   showPhoto={() => setState({ ...state, showPhoto: !state.showPhoto})}
-                  sendCopyRequest={handleSendCopyRequest}
                 />
               ) : (
                 <CommentContainer
@@ -126,22 +135,39 @@ const Page = () => {
                   showPhoto={() => setState({ ...state, showPhoto: !state.showPhoto})}
                 />
               )}
-            </div>
-          </SwiperSlide>
-        ))}
-      </Swiper>
+            </SwiperSlide>
+          ))}
+        </Swiper>
 
-      <div className="shake mt-16 grid justify-items-center text-lg space-y-2">
-        <ArrowsRightLeftIcon className="size-6"/>
-        <p>Swipe around to see more photos</p>
-      </div>
+        <div className="shake mt-4 grid justify-items-center space-y-4">
+          <HiArrowsRightLeft className="text-2xl" />
+          <p className="text-lg">Swipe to see more photos</p>
+        </div>
+
+        <div className='mt-4 flex justify-center'>
+          <div className="w-min flex gap-2">
+            <button type="button" onClick={() => sendCopyRequest()}
+              className="
+                w-full p-2 bg-stone-500 text-white rounded-full font-medium
+            ">
+            <HiEnvelope className="text-xl" />
+            </button>
+
+            <button type="button" onClick={() => window.open("https://www.paypal.me/harrisonkim911/2", "_blank")}
+              className="w-full p-2 bg-stone-500 text-white rounded-full font-medium"
+            >
+              <FaCoffee className="w-5" />
+            </button>
+          </div>
+        </div>
+      </>
 
       <ToastContainer
         position="bottom-center"
         autoClose={false}
         closeOnClick
       />
-    </div>
+    </>
   )
 }
 
