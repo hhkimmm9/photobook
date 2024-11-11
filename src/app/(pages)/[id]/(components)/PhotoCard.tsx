@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { CldImage } from "next-cloudinary"
-import { ChatBubbleBottomCenterTextIcon } from "@heroicons/react/24/solid"
+import { HiChatBubbleBottomCenterText } from "react-icons/hi2"
 import { IPhoto, IComment } from "@/interfaces"
 
 interface PhotoCardProps {
@@ -97,7 +97,7 @@ const PhotoCard = ({ photo, showPhoto }: PhotoCardProps) => {
           <button onClick={showPhoto} className="
             w-full p-2 bg-stone-500 text-white rounded-full font-medium
           ">
-            <ChatBubbleBottomCenterTextIcon className="size-5" />
+            <HiChatBubbleBottomCenterText className="text-xl" />
           </button>
         </div>
       </div>

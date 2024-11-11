@@ -13,12 +13,12 @@ import { useState, useEffect, FormEvent } from "react"
 import Link from "next/link"
 import PhotoCard from "./(components)/PhotoCard"
 import CommentContainer from "./(components)/CommentContainer"
-import { FaCoffee } from "react-icons/fa";
+import { FaCoffee } from "react-icons/fa"
 import {
-  ArrowsRightLeftIcon,
-  ChevronLeftIcon,
-  EnvelopeIcon
-} from "@heroicons/react/24/solid"
+  HiArrowsRightLeft,
+  HiChevronLeft,
+  HiEnvelope
+} from "react-icons/hi2"
 
 import { IAlbum, IPhoto } from "@/interfaces"
 
@@ -106,7 +106,7 @@ const Page = () => {
     <>
       <>
         <Link href="/" className='flex justify-start mb-4'>
-          <ChevronLeftIcon className="size-5 transition-transform duration-200 hover:scale-150" />
+          <HiChevronLeft className="text-xl transition-transform duration-200 hover:scale-150" />
         </Link>
 
         {/* Album title and date */}
@@ -139,9 +139,9 @@ const Page = () => {
           ))}
         </Swiper>
 
-        <div className="shake mt-4 grid justify-items-center text-lg space-y-2">
-          <ArrowsRightLeftIcon className="size-6"/>
-            <p>Swipe to see more photos</p>
+        <div className="shake mt-4 grid justify-items-center space-y-4">
+          <HiArrowsRightLeft className="text-2xl" />
+          <p className="text-lg">Swipe to see more photos</p>
         </div>
 
         <div className='mt-4 flex justify-center'>
@@ -150,7 +150,7 @@ const Page = () => {
               className="
                 w-full p-2 bg-stone-500 text-white rounded-full font-medium
             ">
-            <EnvelopeIcon className="size-5" />
+            <HiEnvelope className="text-xl" />
             </button>
 
             <button type="button" onClick={() => window.open("https://www.paypal.me/harrisonkim911/2", "_blank")}
