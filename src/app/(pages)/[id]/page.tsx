@@ -10,10 +10,15 @@ import 'swiper/css'
 import { useParams } from "next/navigation"
 import { useState, useEffect, FormEvent } from "react"
 
+import Link from "next/link"
 import PhotoCard from "./(components)/PhotoCard"
 import CommentContainer from "./(components)/CommentContainer"
 import { FaCoffee } from "react-icons/fa";
-import { ArrowsRightLeftIcon, EnvelopeIcon } from "@heroicons/react/24/solid"
+import {
+  ArrowsRightLeftIcon,
+  ChevronLeftIcon,
+  EnvelopeIcon
+} from "@heroicons/react/24/solid"
 
 import { IAlbum, IPhoto } from "@/interfaces"
 
@@ -100,6 +105,10 @@ const Page = () => {
   ) : (
     <>
       <>
+        <Link href="/" className='flex justify-start mb-4'>
+          <ChevronLeftIcon className="size-5 transition-transform duration-200 hover:scale-150" />
+        </Link>
+
         {/* Album title and date */}
         <div className="mb-6 text-center">
           <h1 className="font-bold text-2xl text-gray-800">{album?.title}</h1>
