@@ -31,7 +31,7 @@ const Page = () => {
   });
 
   const [state, setState] = useState({
-    hasAccess: true,
+    hasAccess: false,
     pwd: "",
     warningMessage: "",
     showPhoto: true
@@ -87,19 +87,19 @@ const Page = () => {
 
   return !state.hasAccess ? (
     // Password form
-    <div className="flex items-center justify-center">
-      <form onSubmit={handleSubmit} className="w-64 flex flex-col gap-4 items-center justify-center">
-        <input
-          type="password"
-          value={state.pwd}
-          placeholder="Password"
-          onChange={e => setState({ ...state, pwd: e.target.value, warningMessage: "" })}
-          className="w-full p-2 border border-gray-300 rounded-md outline-none border-none"
-        />
-        <button type="submit" className="w-full p-2 bg-stone-500 text-white rounded-md font-medium">
-          Submit
-        </button>
-        <div className="h-4 mt-2 px-1 text-sm text-red-600">{state.warningMessage}</div>
+    <div className="grid justify-items-center h-[calc(100vh-10rem)]">
+      <form onSubmit={handleSubmit} className="w-64 flex flex-col gap-4 justify-center items-center">
+      <input
+        type="password"
+        value={state.pwd}
+        placeholder="Password"
+        onChange={e => setState({ ...state, pwd: e.target.value, warningMessage: "" })}
+        className="w-full p-2 border border-gray-300 rounded-md outline-none border-none"
+      />
+      <button type="submit" className="w-full p-2 bg-stone-500 text-white rounded-md font-medium">
+        Submit
+      </button>
+      <div className="h-4 mt-2 px-1 text-sm text-red-600">{state.warningMessage}</div>
       </form>
     </div>
   ) : (
