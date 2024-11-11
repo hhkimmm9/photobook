@@ -70,13 +70,13 @@ const CommentContainer = ({ photoId, showPhoto }: ICommentContainerProps ) => {
       {!showForm && (
         // buttons: see photo & add a comment
         <div className="grid grid-cols-2 gap-2 p-3">
-          <button type="button" onClick={() => showPhoto()}
-            className="border rounded-lg py-2 font-semibold text-gray-700
-          ">Flip</button>
-          <button
-            className="bg-blue-500 text-white rounded-lg py-2 font-semibold"
+            <button type="button" onClick={() => showPhoto()}
+            className="border rounded-lg py-2 font-semibold text-gray-700 hover:bg-gray-200"
+            >Flip</button>
+            <button
+            className="bg-stone-500 text-white rounded-lg py-2 font-semibold hover:bg-stone-600"
             onClick={() => setShowForm(prev => !prev)}
-          >Add a comment</button>
+            >Add a comment</button>
         </div>
       )}
     </div>
