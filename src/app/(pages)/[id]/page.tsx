@@ -134,7 +134,7 @@ const Page = () => {
 
         <div className="shake mt-10 grid justify-items-center text-lg space-y-2">
           <ArrowsRightLeftIcon className="size-6"/>
-          <p>Swipe around to see more photos</p>
+            <p>Swipe to see more photos</p>
         </div>
 
         <div className='mt-6 flex justify-center'>
