@@ -1,10 +1,4 @@
-import { Dancing_Script } from 'next/font/google';
 import Link from "next/link";
-
-const dancingScript = Dancing_Script({
-  subsets: ['latin'],
-  weight: ['400', '700'],
-});
 
 const Header = () => {
   return (
@@ -13,7 +7,7 @@ const Header = () => {
       backdrop-blur bg-opacity-70 bg-white
       flex items-center justify-center
     ">
-      <Link href="/" className={`${dancingScript.className} text-3xl`}>
+      <Link href="/" className="text-3xl" style={{ fontFamily: "'Dancing Script', cursive" }}>
         Harrison&apos;s Photobook
       </Link>
     </header>

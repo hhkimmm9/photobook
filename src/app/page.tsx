@@ -29,16 +29,16 @@ export default function Home() {
           <Link href={album._id} scroll={false}>
             <CldImage
               src={album.thumbnailImage} alt="Thumbnail Image"
-              width="420" height="420"
+              width="420" height="480"
               crop={{
                 type: "auto",
                 source: true
               }}
-              className="w-full"
+              className="w-full p-3 bg-white"
             />
-            <div className="p-3 shadow-md bg-white">
-              <h2 className="font-medium text-lg">{album.title}</h2>
-              <p className="mt-8 text-end text-sm text-zinc-700">
+            <div className="p-2 pb-5 shadow-md bg-white text-center space-y-3" style={{ fontFamily: "'Dancing Script', cursive" }}>
+              <h2 className="font-medium text-xl">{album.title}</h2>
+              <p className="text-sm text-zinc-700">
                 {new Date(album.date).toDateString()}
               </p>
             </div>
