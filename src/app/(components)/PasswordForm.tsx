@@ -1,10 +1,11 @@
 import { useState, FormEvent } from "react";
 
 interface IPasswordFormProps {
-  hasAccess: () => void;
+  hasAccess: () => void
+  albumId: string | undefined | null
 }
 
-const PasswordForm = ({ hasAccess }: IPasswordFormProps) => {
+const PasswordForm = ({ hasAccess, albumId }: IPasswordFormProps) => {
   const [passwordState, setPasswordState] = useState({
     hasAccess: false,
     pwd: "",
@@ -12,15 +13,18 @@ const PasswordForm = ({ hasAccess }: IPasswordFormProps) => {
   });
 
   const handlePasswordSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    
+    e.preventDefault();
+
+    const url = albumId != null ? '/api/verifyPassword?albumPassword=true' : '/api/verifyPassword?albumPassword=false';
+    const body = albumId != null ? { albumId, pwdInput: passwordState.pwd } : { pwdInput: passwordState.pwd };
+
     try {
-      const res = await fetch('/api/verifyPassword', {
+      const res = await fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ password: passwordState.pwd }),
+        body: JSON.stringify(body),
       });
 
       const result = await res.json();
@@ -28,15 +32,14 @@ const PasswordForm = ({ hasAccess }: IPasswordFormProps) => {
       if (result.success) {
         hasAccess();
       } else {
-        setPasswordState({ ...passwordState, pwd: "", warningMessage: "Incorrect password" })
+        setPasswordState({ ...passwordState, pwd: "", warningMessage: "Incorrect password" });
       }
     } catch (error) {
-      console.error("Error verifying password", error)
+      console.error("Error verifying password", error);
     }
   }
 
   return (
-    // Password form
     <div className="grid justify-items-center h-[calc(100vh-10rem)]">
       <form onSubmit={handlePasswordSubmit} className="w-64 flex flex-col gap-4 justify-center items-center">
       <input
