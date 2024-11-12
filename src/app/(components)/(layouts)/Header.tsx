@@ -7,7 +7,7 @@ const Header = () => {
       backdrop-blur bg-opacity-70 bg-white
       flex items-center justify-center
     ">
-      <Link href="/" className="text-3xl" style={{ fontFamily: "'Dancing Script', cursive" }}>
+      <Link href="/" className="text-2xl pt-1" style={{ fontFamily: "'Dancing Script', cursive" }}>
         Harrison&apos;s Photobook
       </Link>
     </header>

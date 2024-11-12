@@ -75,7 +75,7 @@ const PhotoCard = ({ photo, showPhoto }: PhotoCardProps) => {
 
         {/* top comment */} 
         <div className="flex-grow mt-4">
-          <div className="h-full py-8 flex justify-center items-center text-2xl" style={{ fontFamily: "'Dancing Script', cursive" }}>
+          <div className="h-full py-8 flex justify-center items-center text-xl" style={{ fontFamily: "'Dancing Script', cursive" }}>
             {topComment?.text ?? "No comments available yet"}
           </div>
         </div>

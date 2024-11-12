@@ -38,7 +38,7 @@ export default function Home() {
             />
             <div className="p-2 pb-5 shadow-md bg-white text-center space-y-3" style={{ fontFamily: "'Dancing Script', cursive" }}>
               <h2 className="font-medium text-xl">{album.title}</h2>
-              <p className="text-sm text-zinc-700">
+              <p className="text-sm text-gray-700">
                 {new Date(album.date).toDateString()}
               </p>
             </div>
