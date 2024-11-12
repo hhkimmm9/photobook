@@ -3,12 +3,11 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Image from "next/image";
-import PasswordForm from "@/app/(components)/passwordForm";
+import PasswordForm from "@/app/(components)/PasswordForm";
 
 const UploadPage = () => {
   const router = useRouter();
 
-  const [hasAccess, setHasAccess] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
     thumbnailImage: null as File | null,
@@ -16,9 +15,12 @@ const UploadPage = () => {
     password: "",
     photos: [] as File[],
   });
-  const [thumbnailImageUrl, setThumbnailImageUrl] = useState<string | null>(null);
-  const [thumbnailFeedback, setThumbnailFeedback] = useState("");
-  const [photosFeedback, setPhotosFeedback] = useState("");
+  const [state, setState] = useState({
+    hasAccess: false,
+    thumbnailImageUrl: null as string | null,
+    thumbnailFeedback: "",
+    photosFeedback: ""
+  })
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -31,7 +33,7 @@ const UploadPage = () => {
   const handleThumbnailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files) {
-      setThumbnailFeedback('NOPE: No files selected.');
+      setState({ ...state, thumbnailFeedback: 'NOPE: No files selected.' });
       return;
     }
     const file = files[0];
@@ -40,22 +42,28 @@ const UploadPage = () => {
         ...prevState,
         thumbnailImage: file
       }));
-      setThumbnailImageUrl(URL.createObjectURL(file));
-      setThumbnailFeedback('OK: Image file selected.');
+      setState(prevState => ({
+        ...prevState,
+        thumbnailImageUrl: URL.createObjectURL(file),
+        thumbnailFeedback: 'OK: Image file selected.'
+      }));
     } else {
       setFormData(prevState => ({
         ...prevState,
         thumbnailImage: null
       }));
-      setThumbnailImageUrl(null);
-      setThumbnailFeedback('NOPE: Please select a valid image file.');
+      setState(prevState => ({
+        ...prevState,
+        thumbnailImageUrl: null,
+        thumbnailFeedback: 'NOPE: Please select a valid image file.'
+      }));
     }
   };
 
   const handlePhotosChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files) {
-      setPhotosFeedback('NOPE: No files selected.');
+      setState({ ...state, photosFeedback: 'NOPE: No files selected.'});
       return;
     }
     const validFiles = Array.from(files).filter(file => file.type.startsWith('image/'));
@@ -64,13 +72,13 @@ const UploadPage = () => {
         ...prevState,
         photos: validFiles
       }));
-      setPhotosFeedback('OK: All selected files are valid images.');
+      setState({ ...state, photosFeedback: 'OK: All selected files are valid images.'});
     } else {
       setFormData(prevState => ({
         ...prevState,
         photos: []
       }));
-      setPhotosFeedback('NOPE: Some selected files are not valid images.');
+      setState({ ...state, photosFeedback: 'NOPE: Some selected files are not valid images.' });
     }
   };
 
@@ -101,7 +109,12 @@ const UploadPage = () => {
     return feedback.startsWith('NOPE') ? 'text-red-500' : 'text-green-500';
   };
 
-  return !hasAccess ? <PasswordForm hasAccess={() => setHasAccess(true)} /> : (
+  return !state.hasAccess ?
+    <PasswordForm
+      hasAccess={() => setState({ ...state, hasAccess: true })}
+      albumId={null}
+    /> 
+  : (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
       <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-md space-y-6 w-full max-w-lg">
         <h2 className="text-2xl font-bold text-center text-gray-700">Create A New Album</h2>
@@ -126,14 +139,14 @@ const UploadPage = () => {
             Choose Thumbnail
           </button>
         </div>
-        {thumbnailImageUrl && (
+        {state.thumbnailImageUrl && (
           <div className="grid justify-items-center">
-            <Image src={thumbnailImageUrl} alt="Thumbnail preview" width={256} height={256} />
+            <Image src={state.thumbnailImageUrl} alt="Thumbnail preview" width={256} height={256} />
           </div>
         )}
-        {thumbnailFeedback && (
-          <div className={`text-center ${getFeedbackStyle(thumbnailFeedback)}`}>
-            {thumbnailFeedback}
+        {state.thumbnailFeedback && (
+          <div className={`text-center ${getFeedbackStyle(state.thumbnailFeedback)}`}>
+            {state.thumbnailFeedback}
           </div>
         )}
         <div className="relative">
@@ -150,9 +163,9 @@ const UploadPage = () => {
             Choose Photos
           </button>
         </div>
-        {photosFeedback && (
-          <div className={`text-center ${getFeedbackStyle(photosFeedback)}`}>
-            {photosFeedback}
+        {state.photosFeedback && (
+          <div className={`text-center ${getFeedbackStyle(state.photosFeedback)}`}>
+            {state.photosFeedback}
           </div>
         )}
         <textarea 

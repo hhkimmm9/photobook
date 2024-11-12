@@ -4,6 +4,7 @@ import { Album, Photo } from "@/models";
 import cloudinary from "@/utils/cloudinaryConfig";
 import { Readable } from 'stream';
 import { Schema } from "mongoose";
+import bcrypt from 'bcryptjs';
 
 export async function GET() {
   try {
@@ -34,6 +35,8 @@ export async function POST(req: NextRequest) {
     const password = formData.get('password') as string;
     const path = title.toLowerCase().replace(/ /g, "-");
     const photos = formData.getAll('photos') as Blob[];
+
+    const hashedPassword = await bcrypt.hash(password, 10);
     
     console.log("Parsed form data", { title, description, password, path, photosCount: photos.length });
 
@@ -71,7 +74,7 @@ export async function POST(req: NextRequest) {
       title,
       thumbnailImage: thumbnailUpload,
       description,
-      password,
+      password: hashedPassword,
       path,
       photos: [], // Initially, no photos
       createdAt: new Date(),
