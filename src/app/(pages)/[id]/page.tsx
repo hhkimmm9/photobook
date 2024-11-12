@@ -62,8 +62,8 @@ const Page = () => {
       }
     }
 
-    if (state.hasAccess) fetchAlbumAndPhotos()
-  }, [params.id, state.hasAccess])
+    fetchAlbumAndPhotos()
+  }, [params.id])
 
   const sendCopyRequest = () => {
     window.location.href = `
