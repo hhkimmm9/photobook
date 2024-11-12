@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import Image from "next/image";
 import PasswordForm from "@/app/(components)/PasswordForm";
 
@@ -20,50 +20,43 @@ const UploadPage = () => {
     thumbnailImageUrl: null as string | null,
     thumbnailFeedback: "",
     photosFeedback: ""
-  })
+  });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prevState => ({
       ...prevState,
       [name]: value
     }));
-  };
+  }, []);
 
-  const handleThumbnailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files) {
-      setState({ ...state, thumbnailFeedback: 'NOPE: No files selected.' });
+  const handleThumbnailChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) {
+      setState(prevState => ({ ...prevState, thumbnailFeedback: 'NOPE: No files selected.' }));
       return;
     }
-    const file = files[0];
-    if (file && file.type.startsWith('image/')) {
-      setFormData(prevState => ({
-        ...prevState,
-        thumbnailImage: file
-      }));
+    if (file.type.startsWith('image/')) {
+      setFormData(prevState => ({ ...prevState, thumbnailImage: file }));
       setState(prevState => ({
         ...prevState,
         thumbnailImageUrl: URL.createObjectURL(file),
         thumbnailFeedback: 'OK: Image file selected.'
       }));
     } else {
-      setFormData(prevState => ({
-        ...prevState,
-        thumbnailImage: null
-      }));
+      setFormData(prevState => ({ ...prevState, thumbnailImage: null }));
       setState(prevState => ({
         ...prevState,
         thumbnailImageUrl: null,
         thumbnailFeedback: 'NOPE: Please select a valid image file.'
       }));
     }
-  };
+  }, []);
 
-  const handlePhotosChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePhotosChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files) {
-      setState({ ...state, photosFeedback: 'NOPE: No files selected.'});
+      setState(prevState => ({ ...prevState, photosFeedback: 'NOPE: No files selected.' }));
       return;
     }
     const validFiles = Array.from(files).filter(file => file.type.startsWith('image/'));
@@ -72,17 +65,14 @@ const UploadPage = () => {
         ...prevState,
         photos: validFiles
       }));
-      setState({ ...state, photosFeedback: 'OK: All selected files are valid images.'});
+      setState(prevState => ({ ...prevState, photosFeedback: 'OK: All selected files are valid images.' }));
     } else {
-      setFormData(prevState => ({
-        ...prevState,
-        photos: []
-      }));
-      setState({ ...state, photosFeedback: 'NOPE: Some selected files are not valid images.' });
+      setFormData(prevState => ({ ...prevState, photos: [] }));
+      setState(prevState => ({ ...prevState, photosFeedback: 'NOPE: Some selected files are not valid images.' }));
     }
-  };
+  }, []);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = useCallback(async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const data = new FormData();
@@ -103,18 +93,34 @@ const UploadPage = () => {
     console.log(result);
 
     router.push('/');
-  };
+  }, [formData, router]);
 
   const getFeedbackStyle = (feedback: string) => {
     return feedback.startsWith('NOPE') ? 'text-red-500' : 'text-green-500';
   };
 
-  return !state.hasAccess ?
+  const FileInputButton = ({ onChange, label }: { onChange: (e: React.ChangeEvent<HTMLInputElement>) => void, label: string }) => (
+    <div className="relative">
+      <input 
+        type="file" 
+        onChange={onChange} 
+        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+      />
+      <button 
+        type="button" 
+        className="block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-stone-300 bg-white text-gray-700"
+      >
+        {label}
+      </button>
+    </div>
+  );
+
+  return !state.hasAccess ? (
     <PasswordForm
-      hasAccess={() => setState({ ...state, hasAccess: true })}
+      hasAccess={() => setState(prevState => ({ ...prevState, hasAccess: true }))}
       albumId={null}
-    /> 
-  : (
+    />
+  ) : (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
       <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-md space-y-6 w-full max-w-lg">
         <h2 className="text-2xl font-bold text-center text-gray-700">Create A New Album</h2>
@@ -124,21 +130,9 @@ const UploadPage = () => {
           placeholder="Title" 
           value={formData.title} 
           onChange={handleInputChange} 
-          className="block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-stone-300"
         />
-        <div className="relative">
-          <input 
-            type="file" 
-            onChange={handleThumbnailChange} 
-            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-          />
-          <button 
-            type="button" 
-            className="block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-700"
-          >
-            Choose Thumbnail
-          </button>
-        </div>
+        <FileInputButton onChange={handleThumbnailChange} label="Choose Thumbnail" />
         {state.thumbnailImageUrl && (
           <div className="grid justify-items-center">
             <Image src={state.thumbnailImageUrl} alt="Thumbnail preview" width={256} height={256} />
@@ -149,20 +143,7 @@ const UploadPage = () => {
             {state.thumbnailFeedback}
           </div>
         )}
-        <div className="relative">
-          <input 
-            type="file" 
-            multiple 
-            onChange={handlePhotosChange} 
-            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-          />
-          <button 
-            type="button" 
-            className="block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-700"
-          >
-            Choose Photos
-          </button>
-        </div>
+        <FileInputButton onChange={handlePhotosChange} label="Choose Photos" />
         {state.photosFeedback && (
           <div className={`text-center ${getFeedbackStyle(state.photosFeedback)}`}>
             {state.photosFeedback}
@@ -173,7 +154,7 @@ const UploadPage = () => {
           placeholder="Description" 
           value={formData.description} 
           onChange={handleInputChange} 
-          className="block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-stone-300"
         />
         <input 
           type="password" 
@@ -181,11 +162,11 @@ const UploadPage = () => {
           placeholder="Password" 
           value={formData.password} 
           onChange={handleInputChange} 
-          className="block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-stone-300"
         />
         <button 
           type="submit" 
-          className="block w-full p-3 bg-blue-500 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-700"
+          className="block w-full p-3 bg-stone-500 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-stone-700"
         >
           Submit
         </button>
