@@ -84,15 +84,23 @@ const UploadPage = () => {
     data.append("password", formData.password);
     formData.photos.forEach(photo => data.append("photos", photo));
 
-    const response = await fetch('/api/albums', {
-      method: 'POST',
-      body: data
-    });
+    try {
+      const response = await fetch('/api/albums', {
+        method: 'POST',
+        body: data
+      });
 
-    const result = await response.json();
-    console.log(result);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
 
-    router.push('/');
+      const result = await response.json();
+      console.log(result);
+
+      router.push('/');
+    } catch (error) {
+      console.error('Error submitting form:', error);
+    }
   }, [formData, router]);
 
   const getFeedbackStyle = (feedback: string) => {
