@@ -19,11 +19,11 @@ const fetchAlbum = async (albumId: string): Promise<IAlbum | null> => {
   return album
 }
 interface PageProps {
-  params: Promise<{ id: string }>
+  params: { id: string }
 }
 
 const Page = async ({ params }: PageProps) => {
-  const album = await fetchAlbum((await params).id)
+  const album = await fetchAlbum(params.id)
 
   if (!album) {
     return <div>Error loading album</div>;
