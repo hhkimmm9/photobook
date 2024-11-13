@@ -2,8 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useCallback } from "react";
+import PasswordFormWrapper from "@/app/(components)/PasswordFormWrapper";
 import Image from "next/image";
-import PasswordForm from "@/app/(components)/PasswordForm";
 
 const UploadPage = () => {
   const router = useRouter();
@@ -115,64 +115,61 @@ const UploadPage = () => {
     </div>
   );
 
-  return !state.hasAccess ? (
-    <PasswordForm
-      hasAccess={() => setState(prevState => ({ ...prevState, hasAccess: true }))}
-      albumId={null}
-    />
-  ) : (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-md space-y-6 w-full max-w-lg">
-        <h2 className="text-2xl font-bold text-center text-gray-700">Create A New Album</h2>
-        <input 
-          type="text" 
-          name="title"
-          placeholder="Title" 
-          value={formData.title} 
-          onChange={handleInputChange} 
-          className="block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-stone-300"
-        />
-        <FileInputButton onChange={handleThumbnailChange} label="Choose Thumbnail" />
-        {state.thumbnailImageUrl && (
-          <div className="grid justify-items-center">
-            <Image src={state.thumbnailImageUrl} alt="Thumbnail preview" width={256} height={256} />
-          </div>
-        )}
-        {state.thumbnailFeedback && (
-          <div className={`text-center ${getFeedbackStyle(state.thumbnailFeedback)}`}>
-            {state.thumbnailFeedback}
-          </div>
-        )}
-        <FileInputButton onChange={handlePhotosChange} label="Choose Photos" />
-        {state.photosFeedback && (
-          <div className={`text-center ${getFeedbackStyle(state.photosFeedback)}`}>
-            {state.photosFeedback}
-          </div>
-        )}
-        <textarea 
-          name="description"
-          placeholder="Description" 
-          value={formData.description} 
-          onChange={handleInputChange} 
-          className="block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-stone-300"
-        />
-        <input 
-          type="password" 
-          name="password"
-          placeholder="Password" 
-          value={formData.password} 
-          onChange={handleInputChange} 
-          className="block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-stone-300"
-        />
-        <button 
-          type="submit" 
-          className="block w-full p-3 bg-stone-500 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-stone-700"
-        >
-          Submit
-        </button>
-      </form>
-    </div>
-  );
+  return (
+    <PasswordFormWrapper albumId={null}>
+      <div className="flex justify-center items-center min-h-screen bg-gray-100">
+        <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-md space-y-6 w-full max-w-lg">
+          <h2 className="text-2xl font-bold text-center text-gray-700">Create A New Album</h2>
+          <input 
+            type="text" 
+            name="title"
+            placeholder="Title" 
+            value={formData.title} 
+            onChange={handleInputChange} 
+            className="block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-stone-300"
+          />
+          <FileInputButton onChange={handleThumbnailChange} label="Choose Thumbnail" />
+          {state.thumbnailImageUrl && (
+            <div className="grid justify-items-center">
+              <Image src={state.thumbnailImageUrl} alt="Thumbnail preview" width={256} height={256} />
+            </div>
+          )}
+          {state.thumbnailFeedback && (
+            <div className={`text-center ${getFeedbackStyle(state.thumbnailFeedback)}`}>
+              {state.thumbnailFeedback}
+            </div>
+          )}
+          <FileInputButton onChange={handlePhotosChange} label="Choose Photos" />
+          {state.photosFeedback && (
+            <div className={`text-center ${getFeedbackStyle(state.photosFeedback)}`}>
+              {state.photosFeedback}
+            </div>
+          )}
+          <textarea 
+            name="description"
+            placeholder="Description" 
+            value={formData.description} 
+            onChange={handleInputChange} 
+            className="block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-stone-300"
+          />
+          <input 
+            type="password" 
+            name="password"
+            placeholder="Password" 
+            value={formData.password} 
+            onChange={handleInputChange} 
+            className="block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-stone-300"
+          />
+          <button 
+            type="submit" 
+            className="block w-full p-3 bg-stone-500 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-stone-700"
+          >
+            Submit
+          </button>
+        </form>
+      </div>
+    </PasswordFormWrapper>
+  )
 };
 
 export default UploadPage;
