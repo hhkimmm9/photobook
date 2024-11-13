@@ -99,11 +99,12 @@ const UploadPage = () => {
     return feedback.startsWith('NOPE') ? 'text-red-500' : 'text-green-500';
   };
 
-  const FileInputButton = ({ onChange, label }: { onChange: (e: React.ChangeEvent<HTMLInputElement>) => void, label: string }) => (
+  const FileInputButton = ({ onChange, label, multiple }: { onChange: (e: React.ChangeEvent<HTMLInputElement>) => void, label: string, multiple: boolean }) => (
     <div className="relative">
       <input 
         type="file" 
         onChange={onChange} 
+        multiple={multiple}
         className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
       />
       <button 
@@ -128,7 +129,7 @@ const UploadPage = () => {
             onChange={handleInputChange} 
             className="block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-stone-300"
           />
-          <FileInputButton onChange={handleThumbnailChange} label="Choose Thumbnail" />
+          <FileInputButton onChange={handleThumbnailChange} label="Choose Thumbnail" multiple={false} />
           {state.thumbnailImageUrl && (
             <div className="grid justify-items-center">
               <Image src={state.thumbnailImageUrl} alt="Thumbnail preview" width={256} height={256} />
@@ -139,7 +140,7 @@ const UploadPage = () => {
               {state.thumbnailFeedback}
             </div>
           )}
-          <FileInputButton onChange={handlePhotosChange} label="Choose Photos" />
+          <FileInputButton onChange={handlePhotosChange} label="Choose Photos" multiple={true} />
           {state.photosFeedback && (
             <div className={`text-center ${getFeedbackStyle(state.photosFeedback)}`}>
               {state.photosFeedback}
