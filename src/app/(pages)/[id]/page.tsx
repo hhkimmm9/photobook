@@ -8,9 +8,10 @@ import { Navigation } from "swiper/modules"
 import 'swiper/css'
 
 import { useParams } from "next/navigation"
-import { useState, useEffect, FormEvent } from "react"
+import { useState, useEffect } from "react"
 
 import Link from "next/link"
+import PasswordForm from '@/app/(components)/PasswordForm';
 import PhotoCard from "./(components)/PhotoCard"
 import CommentContainer from "./(components)/CommentContainer"
 import { FaCoffee } from "react-icons/fa"
@@ -31,9 +32,7 @@ const Page = () => {
   });
 
   const [state, setState] = useState({
-    hasAccess: true,
-    pwd: "",
-    warningMessage: "",
+    hasAccess: false,
     showPhoto: true
   })
   const [album, setAlbum] = useState<IAlbum>()
@@ -76,33 +75,12 @@ const Page = () => {
     notify()
   }
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    if (state.pwd === album?.password) {
-      setState({ ...state, hasAccess: true })
-    } else {
-      setState({ ...state, pwd: "", warningMessage: "Incorrect password" })
-    }
-  }
-
-  return !state.hasAccess ? (
-    // Password form
-    <div className="flex items-center justify-center">
-      <form onSubmit={handleSubmit} className="w-64 flex flex-col gap-4 items-center justify-center">
-        <input
-          type="password"
-          value={state.pwd}
-          placeholder="Password"
-          onChange={e => setState({ ...state, pwd: e.target.value, warningMessage: "" })}
-          className="w-full p-2 border border-gray-300 rounded-md outline-none border-none"
-        />
-        <button type="submit" className="w-full p-2 bg-stone-500 text-white rounded-md font-medium">
-          Submit
-        </button>
-        <div className="h-4 mt-2 px-1 text-sm text-red-600">{state.warningMessage}</div>
-      </form>
-    </div>
-  ) : (
+  return !state.hasAccess ?
+    <PasswordForm
+      hasAccess={() => setState({ ...state, hasAccess: true })}
+      albumId={album?._id}
+    />
+  : (
     <>
       <>
         <Link href="/" className='flex justify-start mb-4'>

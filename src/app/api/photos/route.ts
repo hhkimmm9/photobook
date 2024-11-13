@@ -3,8 +3,8 @@ import { connectToDB } from "@/utils/db";
 import { Photo } from "@/models";
 
 export async function GET(req: NextRequest) {
-  const url = new URL(req.url);
-  const albumId = url.searchParams.get("albumId");
+  const searchParams = req.nextUrl.searchParams;
+  const albumId = searchParams.get("albumId");
 
   if (!albumId) {
     return NextResponse.json({ message: "albumId is required" }, { status: 400 });

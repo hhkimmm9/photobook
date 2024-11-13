@@ -3,8 +3,8 @@ import { connectToDB } from "@/utils/db";
 import { Photo, Comment } from "@/models";
 
 export async function GET(req: NextRequest) {
-  const url = new URL(req.url);
-  const photoId = url.searchParams.get("photoId");
+  const searchParams = req.nextUrl.searchParams;
+  const photoId = searchParams.get("photoId");
 
   try {
     await connectToDB();
@@ -33,8 +33,8 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  const url = new URL(req.url);
-  const photoId = url.searchParams.get("photoId");
+  const searchParams = req.nextUrl.searchParams;
+  const photoId = searchParams.get("photoId");
   
   const { username, text, password } = await req.json();
   
