@@ -63,7 +63,7 @@ const PhotoCard = ({ photo }: PhotoCardProps) => {
   }, [loadComments]);
 
   return (
-    <div className="h-[32rem]">
+    <div className="h-[32rem] md:h-[42rem] lg:h-[46rem]">
       { !flip ? (
         <div className="flex flex-col gap-3">
           <div className="p-4 flex flex-col bg-stone-50">
