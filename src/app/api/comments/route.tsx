@@ -57,14 +57,11 @@ export async function POST(req: NextRequest) {
       vote: 0,
       createdAt: new Date(),
       updatedAt: new Date()
-    })
+    });
     const createdComment = await newComment.save();
     console.log("New comment created:", createdComment);
 
-    photo.comments.push(createdComment);
-    await photo.save();
-
-    return NextResponse.json({ createdComment }, { status: 200 });
+    return NextResponse.json({ createdComment }, { status: 201 });
   } catch (error) {
     console.error("Error adding a comment", error);
     return NextResponse.json({ message: "Error adding a comment to a photo", error }, { status: 500 });
