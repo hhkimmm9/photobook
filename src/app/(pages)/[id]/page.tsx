@@ -1,151 +1,45 @@
-"use client"
+import PasswordFormWrapper from "@/app/(components)/PasswordFormWrapper";
+import PhotoCardSwiper from "@/app/(components)/PhotoCardSwiper";
+import Instruction from './(components)/Instruction';
 
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { IAlbum } from "@/interfaces"
 
-import { Swiper, SwiperSlide } from "swiper/react"
-import { Navigation } from "swiper/modules"
-import 'swiper/css'
-
-import { useParams } from "next/navigation"
-import { useState, useEffect } from "react"
-
-import Link from "next/link"
-import PasswordForm from '@/app/(components)/PasswordForm';
-import PhotoCard from "./(components)/PhotoCard"
-import CommentContainer from "./(components)/CommentContainer"
-import { FaCoffee } from "react-icons/fa"
-import {
-  HiArrowsRightLeft,
-  HiChevronLeft,
-  HiEnvelope
-} from "react-icons/hi2"
-
-import { IAlbum, IPhoto } from "@/interfaces"
-
-const Page = () => {
-  const params = useParams()
-
-  const notify = () => toast("Woohoo! You liked this album! Now, how about treating me to a coffee? ☕️", {
-    autoClose: false,
-    closeOnClick: true
-  });
-
-  const [state, setState] = useState({
-    hasAccess: false,
-    showPhoto: true
+const fetchAlbum = async (albumId: string): Promise<IAlbum | null> => {
+  const res = await fetch(`${process.env.BASE_URL}/api/albums/${albumId}`, {
+    method: 'GET',
+    headers: { "Content-Type": "application/json" }
   })
-  const [album, setAlbum] = useState<IAlbum>()
-  const [photos, setPhotos] = useState<IPhoto[]>()
 
-  useEffect(() => {
-    const fetchAlbumAndPhotos = async () => {
-      try {
-        const [albumResponse, photosResponse] = await Promise.all([
-          fetch(`/api/albums/${params.id}`, {
-            method: 'GET',
-            headers: { "Content-Type": "application/json" }
-          }),
-          fetch(`/api/photos?albumId=${params.id}`, {
-            method: 'GET',
-            headers: { "Content-Type": "application/json" }
-          })
-        ])
+  if (!res.ok) {
+    console.error("Error fetching album")
+    return null
+  }
+  const { album }: { album: IAlbum } = await res.json()
 
-        const { album } = await albumResponse.json()
-        const { photos } = await photosResponse.json()
+  return album
+}
+interface PageProps {
+  params: { id: string }
+}
 
-        setAlbum(album)
-        setPhotos(photos)
-      } catch (error) {
-        console.error("Error fetching album or photos", error)
-      }
-    }
+const Page = async ({ params }: PageProps) => {
+  const album = await fetchAlbum(params.id)
 
-    if (state.hasAccess) fetchAlbumAndPhotos()
-  }, [params.id, state.hasAccess])
-
-  const sendCopyRequest = () => {
-    window.location.href = `
-      mailto:harrisonkim911@gmail.com?
-      subject=Request for a copy of ${album?.title}&
-      body=I love this album!: ${window.location.href}
-    `
-
-    notify()
+  if (!album) {
+    return <div>Error loading album</div>;
   }
 
-  return !state.hasAccess ?
-    <PasswordForm
-      hasAccess={() => setState({ ...state, hasAccess: true })}
-      albumId={album?._id}
-    />
-  : (
-    <>
-      <>
-        <Link href="/" className='flex justify-start mb-4'>
-          <HiChevronLeft className="text-xl transition-transform duration-200 hover:scale-150" />
-        </Link>
+  return (
+    <PasswordFormWrapper albumId={album._id}>
+      <div className="mb-6 text-center" style={{ fontFamily: "'Dancing Script', cursive" }}>
+        <h2 className="font-semibold text-3xl text-stone-900">{album.title}</h2>
+        <p className="mt-3 text-sm text-stone-600">{new Date(album.date).toDateString()}</p>
+      </div>
 
-        {/* Album title and date */}
-        <div className="mb-6 text-center">
-          <h1 className="font-bold text-2xl text-gray-800">{album?.title}</h1>
-          <p className="text-sm text-gray-500">{new Date(album?.date ?? "").toDateString()}</p>
-        </div>
+      <PhotoCardSwiper albumId={album._id} />
 
-        <Swiper
-          modules={[Navigation]}
-          spaceBetween={50}
-          slidesPerView={1}
-          onSlideChange={() => {setState({ ...state, showPhoto: true })}}
-          onSwiper={(swiper) => console.log(swiper)}
-        >
-          {photos?.map((photo, index) => (
-            <SwiperSlide key={index}>
-              { state.showPhoto ? (
-                <PhotoCard
-                  photo={photo}
-                  showPhoto={() => setState({ ...state, showPhoto: !state.showPhoto})}
-                />
-              ) : (
-                <CommentContainer
-                  photoId={photo._id}
-                  showPhoto={() => setState({ ...state, showPhoto: !state.showPhoto})}
-                />
-              )}
-            </SwiperSlide>
-          ))}
-        </Swiper>
-
-        <div className="shake mt-4 grid justify-items-center space-y-4">
-          <HiArrowsRightLeft className="text-2xl" />
-          <p className="text-lg">Swipe to see more photos</p>
-        </div>
-
-        <div className='mt-4 flex justify-center'>
-          <div className="w-min flex gap-2">
-            <button type="button" onClick={() => sendCopyRequest()}
-              className="
-                w-full p-2 bg-stone-500 text-white rounded-full font-medium
-            ">
-            <HiEnvelope className="text-xl" />
-            </button>
-
-            <button type="button" onClick={() => window.open("https://www.paypal.me/harrisonkim911/2", "_blank")}
-              className="w-full p-2 bg-stone-500 text-white rounded-full font-medium"
-            >
-              <FaCoffee className="w-5" />
-            </button>
-          </div>
-        </div>
-      </>
-
-      <ToastContainer
-        position="bottom-center"
-        autoClose={false}
-        closeOnClick
-      />
-    </>
+      <Instruction albumTitle={album.title} />
+    </PasswordFormWrapper>
   )
 }
 

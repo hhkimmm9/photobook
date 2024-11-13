@@ -60,49 +60,57 @@ const AddCommentForm = ({ photoId, setShowForm }: { photoId: string, setShowForm
   }
 
   return (
-    <form onSubmit={handleSubmit} className="grid grid-rows-8 gap-4 w-full p-3">
-      <div className="row-span-1 grid grid-cols-2 gap-2">
-        <input
-          type="text"
-          name="username"
-          placeholder="Username"
-          value={formData.username}
+    <form onSubmit={handleSubmit} className="w-full h-[29rem] flex flex-col justify-between bg-white">
+      <div className="p-4 flex flex-col gap-4">
+        <div className="grid grid-cols-2 gap-3">
+          <input
+            type="text"
+            name="username"
+            placeholder="Username"
+            value={formData.username}
+            onChange={handleChange}
+            className="bg-stone-50 border rounded-lg p-2 w-full outline-none"
+          />
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={formData.password}
+            onChange={handleChange}
+            className="bg-stone-50 border rounded-lg p-2 w-full outline-none"
+          />
+        </div>
+        
+        <textarea
+          name="text"
+          value={formData.text}
           onChange={handleChange}
-          className="bg-stone-50 border rounded-lg p-2 w-full outline-none"
+          className="bg-stone-50 border rounded-lg p-2 w-full outline-none h-72"
         />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={formData.password}
-          onChange={handleChange}
-          className="bg-stone-50 border rounded-lg p-2 w-full outline-none"
-        />
-      </div>
-      
-      <textarea
-        name="text"
-        value={formData.text}
-        onChange={handleChange}
-        className="row-span-5 bg-stone-50 border rounded-lg p-2 w-full outline-none"
-      />
 
-      <div className="row-span-1 flex justify-between items-center">
-        <p className="text-red-500 text-sm ml-1">{warningMessage}</p>
-        <p className={formData.text.length > 128 ? 'text-red-500' : ''}>
-          {formData.text.length}/128
-        </p>
+        <div className="flex justify-between items-center">
+          <p className="text-red-500 text-sm ml-1 truncate">{warningMessage}</p>
+          <p className={formData.text.length > 128 ? "text-red-500" : ""}>
+            {formData.text.length}/128
+          </p>
+        </div>
       </div>
 
-      <div className="row-span-1 grid grid-cols-2 gap-2">
-        <button type="button"
+      <div className="grid grid-cols-2">
+        <button
+          type="button"
           onClick={() => setShowForm()}
-          className="border rounded-lg py-2 font-semibold text-gray-700 hover:bg-gray-200"
-        >Cancel</button>
-
-        <button type="submit" disabled={loading}
-          className="bg-stone-500 text-white rounded-lg py-2 font-semibold hover:bg-stone-600"
-        >{loading ? "Posting..." : "Post"}</button>
+          className="py-2 font-semibold text-gray-700 bg-white  hover:bg-gray-200"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          disabled={loading}
+          className="py-2 font-semibold text-white bg-stone-500 hover:bg-stone-600"
+        >
+          {loading ? "Posting..." : "Post"}
+        </button>
       </div>
       {error && <p className="text-red-500">{error}</p>}
     </form>
