@@ -46,13 +46,13 @@ const CommentContainer = ({ photoId, toggleShowPhoto }: ICommentContainerProps )
       {!showForm ? (
         <div className="h-[29rem]">
           <div className="h-full flex flex-col bg-white">
-            <div className="flex justify-center items-center p-4 grow">
+            <div className="flex justify-center items-center p-3 grow">
               {comments.length === 0 ? (
               <div className="text-center text-gray-500">
                 You can be the first one to leave a comment on this lovely photo!
               </div>
               ) : (
-              <div className="w-full overflow-y-auto p-3 space-y-4">
+              <div className="w-full overflow-y-auto space-y-4">
                 {comments.map(comment => (
                   <CommentItem key={comment._id} comment={comment} />
                 ))}
